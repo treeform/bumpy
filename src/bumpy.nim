@@ -25,6 +25,10 @@ proc overlap*(a: Vec2, b: Circle): bool =
   ## Does point overlap a circle?
   a.dist(b.pos) <= b.radius
 
+proc overlap*(a: Circle, b: Vec2): bool =
+  ## Does circle overlap a point?
+  overlap(b, a)
+
 proc overlap*(a, b: Circle): bool =
   ## Do two circles overlap?
   a.pos.dist(b.pos) <= b.radius + a.radius
@@ -35,6 +39,10 @@ proc overlap*(a: Vec2, b: Rect): bool =
   a.x <= b.x + b.w and # left of the right edge AND
   a.y >= b.y and # below the top AND
   a.y <= b.y + b.h # above the bottom.
+
+proc overlap*(a: Rect, b: Vec2): bool =
+  ## Does a rect overlap a point?
+  overlap(b, a)
 
 proc overlap*(a, b: Rect): bool =
   ## Do two rectangles overlap?
@@ -69,6 +77,10 @@ proc overlap*(a: Circle, b: Rect): bool =
   # If the distance is less than the radius, collision!
   distance <= a.radius
 
+proc overlap*(a: Rect, b: Circle): bool =
+  ## Does a rect overlap a circle?
+  overlap(b, a)
+
 proc overlap*(a: Vec2, s: Segment, buffer = 0.1): bool =
   ## Does a point overlap a segment?
 
@@ -87,7 +99,11 @@ proc overlap*(a: Vec2, s: Segment, buffer = 0.1): bool =
   d1 + d2 >= lineLen - buffer and
   d1 + d2 <= lineLen + buffer
 
-proc overlap*(c: Circle, s: Segment, buffer = 0.1): bool =
+proc overlap*(a: Segment, b: Vec2, buffer = 0.1): bool =
+  ## Does a segment overlap a point?
+  overlap(b, a, buffer)
+
+proc overlap*(c: Circle, s: Segment): bool =
   ## Does a circle overlap a segment?
 
   # is either end INSIDE the circle?
@@ -101,7 +117,7 @@ proc overlap*(c: Circle, s: Segment, buffer = 0.1): bool =
   let len = s.a.dist(s.b)
 
   # get dot product of the line and circle
-  let dot = ( ((c.pos.x-s.a.x)*(s.b.x-s.a.x)) + ((c.pos.y-s.a.y)*(s.b.y-s.a.y)) ) / pow(len,2)
+  let dot = (((c.pos.x-s.a.x)*(s.b.x-s.a.x)) + ((c.pos.y-s.a.y)*(s.b.y-s.a.y))) / pow(len,2)
 
   # find the closest point on the line
   let closestX = s.a.x + (dot * (s.b.x-s.a.x))
@@ -113,15 +129,24 @@ proc overlap*(c: Circle, s: Segment, buffer = 0.1): bool =
   if not onSegment:
     return false
 
-  # optionally, draw a circle at the closest
-  # point on the line
-  # fill(255,0,0)
-  # noStroke()
-  # ellipse(closestX, closestY, 20, 20)
-
   # get distance to closest point
   let distX = closestX - c.pos.x
   let distY = closestY - c.pos.y
-  let distance = sqrt( (distX*distX) + (distY*distY) )
+  let distance = sqrt((distX*distX) + (distY*distY))
 
   distance <= c.radius
+
+proc overlap*(s: Segment, c: Circle): bool =
+  ## Does a circle overlap a segment?
+  overlap(c, s)
+
+proc overlap*(d, s: Segment): bool =
+  ## Do two segments overlap?
+
+  # Calculate the distance to intersection point.
+  let
+    uA = ((s.b.x-s.a.x)*(d.a.y-s.a.y) - (s.b.y-s.a.y)*(d.a.x-s.a.x)) / ((s.b.y-s.a.y)*(d.b.x-d.a.x) - (s.b.x-s.a.x)*(d.b.y-d.a.y))
+    uB = ((d.b.x-d.a.x)*(d.a.y-s.a.y) - (d.b.y-d.a.y)*(d.a.x-s.a.x)) / ((s.b.y-s.a.y)*(d.b.x-d.a.x) - (s.b.x-s.a.x)*(d.b.y-d.a.y))
+
+  # If uA and uB are between 0-1, lines are colliding.
+  uA >= 0 and uA <= 1 and uB >= 0 and uB <= 1
