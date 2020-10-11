@@ -106,8 +106,7 @@ proc overlap*(a: Segment, b: Vec2, buffer = 0.1): bool =
 proc overlap*(c: Circle, s: Segment): bool =
   ## Does a circle overlap a segment?
 
-  # is either end INSIDE the circle?
-  # if so, return true immediately
+  # If  either end inside the circle return.
   let inside1 = overlap(s.a, c)
   let inside2 = overlap(s.b, c)
   if inside1 or inside2:
@@ -150,3 +149,24 @@ proc overlap*(d, s: Segment): bool =
 
   # If uA and uB are between 0-1, lines are colliding.
   uA >= 0 and uA <= 1 and uB >= 0 and uB <= 1
+
+proc overlap*(s: Segment, r: Rect): bool =
+  ## Does a segments overlap a rectangle?
+
+  # Check if start or end of the segment is indie the rectangle.
+  if overlap(s.a, r) or overlap(s.b, r):
+    return true
+
+  # Check if the line has hit any of the rectangle's sides.
+  let
+    left =   overlap(s, segment(vec2(r.x, r.y), vec2(r.x, r.y + r.h)))
+    right =  overlap(s, segment(vec2(r.x + r.w, r.y), vec2(r.x + r.w, r.y + r.h)))
+    top =    overlap(s, segment(vec2(r.x, r.y), vec2(r.x + r.w, r.y)))
+    bottom = overlap(s, segment(vec2(r.x, r.y + r.h), vec2(r.x + r.w, r.y + r.h)))
+
+  # If any of the above are true, the line has hit the rectangle.
+  left or right or top or bottom
+
+proc overlap*(r: Rect, s: Segment): bool =
+  ## Does a rectangle overlap a segment?
+  overlap(s, r)
