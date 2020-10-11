@@ -106,32 +106,29 @@ proc overlap*(a: Segment, b: Vec2, buffer = 0.1): bool =
 proc overlap*(c: Circle, s: Segment): bool =
   ## Does a circle overlap a segment?
 
-  # If  either end inside the circle return.
-  let inside1 = overlap(s.a, c)
-  let inside2 = overlap(s.b, c)
-  if inside1 or inside2:
+  # If either end inside the circle return.
+  if overlap(s.a, c) or overlap(s.b, c):
     return true
 
-  # get length of the line
+  # Get length of the line.
   let len = s.a.dist(s.b)
 
-  # get dot product of the line and circle
-  let dot = (((c.pos.x-s.a.x)*(s.b.x-s.a.x)) + ((c.pos.y-s.a.y)*(s.b.y-s.a.y))) / pow(len,2)
+  # Get dot product of the line and circle.
+  let dot = (
+    (c.pos.x - s.a.x) * (s.b.x - s.a.x) +
+    (c.pos.y - s.a.y) * (s.b.y - s.a.y)
+  ) / pow(len,2)
 
-  # find the closest point on the line
-  let closestX = s.a.x + (dot * (s.b.x-s.a.x))
-  let closestY = s.a.y + (dot * (s.b.y-s.a.y))
+  # Find the closest point on the line.
+  let closest = s.a + (dot * (s.b - s.a))
 
-  # is this point actually on the line segment?
-  # if so keep going, but if not, return false
-  let onSegment = overlap(vec2(closestX, closestY), s)
+  # Is this point actually on the line segment?
+  let onSegment = overlap(closest, s)
   if not onSegment:
     return false
 
-  # get distance to closest point
-  let distX = closestX - c.pos.x
-  let distY = closestY - c.pos.y
-  let distance = sqrt((distX*distX) + (distY*distY))
+  # Get distance to closest point.
+  let distance = closest.dist(c.pos)
 
   distance <= c.radius
 
@@ -144,8 +141,12 @@ proc overlap*(d, s: Segment): bool =
 
   # Calculate the distance to intersection point.
   let
-    uA = ((s.b.x-s.a.x)*(d.a.y-s.a.y) - (s.b.y-s.a.y)*(d.a.x-s.a.x)) / ((s.b.y-s.a.y)*(d.b.x-d.a.x) - (s.b.x-s.a.x)*(d.b.y-d.a.y))
-    uB = ((d.b.x-d.a.x)*(d.a.y-s.a.y) - (d.b.y-d.a.y)*(d.a.x-s.a.x)) / ((s.b.y-s.a.y)*(d.b.x-d.a.x) - (s.b.x-s.a.x)*(d.b.y-d.a.y))
+    uA1 = (s.b.x - s.a.x) * (d.a.y - s.a.y) - (s.b.y - s.a.y) * (d.a.x - s.a.x)
+    uB1 = (d.b.x - d.a.x) * (d.a.y - s.a.y) - (d.b.y - d.a.y) * (d.a.x - s.a.x)
+    uA2 = (s.b.y - s.a.y) * (d.b.x - d.a.x) - (s.b.x - s.a.x) * (d.b.y - d.a.y)
+    uB2 = (s.b.y - s.a.y) * (d.b.x - d.a.x) - (s.b.x - s.a.x) * (d.b.y - d.a.y)
+    uA = uA1 / uA2
+    uB = uB1 / uB2
 
   # If uA and uB are between 0-1, lines are colliding.
   uA >= 0 and uA <= 1 and uB >= 0 and uB <= 1
@@ -170,3 +171,23 @@ proc overlap*(s: Segment, r: Rect): bool =
 proc overlap*(r: Rect, s: Segment): bool =
   ## Does a rectangle overlap a segment?
   overlap(s, r)
+
+proc overlap*(poly: seq[Vec2], p: Vec2): bool =
+  ## Does a polygon overlap a point?
+  var collision = false
+
+  # Go through each of the vertices and the next vertex in the polygon.
+  for i in 0 ..< poly.len:
+    let
+      vc = poly[i]                      # c for "current"
+      vn = poly[(i + 1) mod poly.len]   # n for "next"
+
+    # Compare position, flip 'collision' variable back and forth.
+    if ((vc.y >= p.y and vn.y < p.y) or (vc.y < p.y and vn.y >= p.y)) and (p.x < (vn.x - vc.x) * (p.y - vc.y) / (vn.y - vc.y) + vc.x):
+      collision = not collision
+
+  collision
+
+proc overlap*(p: Vec2, poly: seq[Vec2]): bool =
+  ## Does a point overlap a polygon?
+  overlap(poly, p)
