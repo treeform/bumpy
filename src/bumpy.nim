@@ -177,15 +177,37 @@ iterator pairwise[T](s: seq[T]): (T, T) =
   for i in 0 ..< s.len:
     yield(s[i], s[(i + 1) mod s.len])
 
+proc overlapTri(tri: seq[Vec2], p: Vec2): bool =
+  ## Optimization for triangles:
+
+  # get the area of the triangle
+  let areaOrig = abs((tri[1].x-tri[0].x)*(tri[2].y-tri[0].y) - (tri[2].x-tri[0].x)*(tri[1].y-tri[0].y))
+
+  # get the area of 3 triangles made between the point
+  # and the corners of the triangle
+  let
+    area1 = abs((tri[0].x-p.x)*(tri[1].y-p.y) - (tri[1].x-p.x)*(tri[0].y-p.y))
+    area2 = abs((tri[1].x-p.x)*(tri[2].y-p.y) - (tri[2].x-p.x)*(tri[1].y-p.y))
+    area3 = abs((tri[2].x-p.x)*(tri[0].y-p.y) - (tri[0].x-p.x)*(tri[2].y-p.y))
+
+  # If the sum of the three areas equals the original,
+  # we're inside the triangle!
+  area1 + area2 + area3 == areaOrig
+
 proc overlap*(poly: seq[Vec2], p: Vec2): bool =
   ## Test overlap: polygon vs point.
+  if poly.len == 3:
+    return overlapTri(poly, p)
+
   var collision = false
 
   # Go through each of the vertices and the next vertex in the polygon.
   for vc, vn in poly.pairwise:
     # Compare position, flip 'collision' variable back and forth.
-    if ((vc.y >= p.y and vn.y < p.y) or (vc.y < p.y and vn.y >= p.y)) and (p.x < (vn.x - vc.x) * (p.y - vc.y) / (vn.y - vc.y) + vc.x):
-      collision = not collision
+    if
+      ((vc.y >= p.y and vn.y < p.y) or (vc.y < p.y and vn.y >= p.y)) and
+      (p.x < (vn.x - vc.x) * (p.y - vc.y) / (vn.y - vc.y) + vc.x):
+        collision = not collision
 
   collision
 
@@ -221,3 +243,24 @@ proc overlap*(poly: seq[Vec2], r: Rect): bool =
 proc overlap*(r: Rect, poly: seq[Vec2]): bool =
   ## Test overlap: rect vs polygon.
   overlap(r, poly)
+
+proc overlap*(poly: seq[Vec2], s: Segment): bool =
+  ## Test overlap: polygon vs segment.
+  for vc, vn in poly.pairwise:
+    if overlap(segment(vc, vn), s):
+      return true
+  # Test if the rectangle is inside the polygon.
+  return overlap(poly, s.a)
+
+proc overlap*(s: Segment, poly: seq[Vec2]): bool =
+  ## Test overlap: segment vs polygon.
+  overlap(poly, s)
+
+proc overlap*(a: seq[Vec2], b: seq[Vec2]): bool =
+  ## Test overlap: polygon vs segment.
+  for a1, a2 in a.pairwise:
+    for b1, b2 in b.pairwise:
+      if overlap(segment(a1, a2), segment(b1, b2)):
+        return true
+  # Test if the a polygon is inside the b polygon.
+  return overlap(a[0], b)

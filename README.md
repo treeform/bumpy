@@ -5,14 +5,14 @@ Based on the book http://www.jeffreythompson.org/collision-detection/table_of_co
 
 Supported collisions:
 
-Shape         | Point         | Circle        | Rectangle     | Segment       | Polygon       | Triangle      |
-------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-Point         | ✅           | ✅            | ✅           | ✅            | ✅           |               |
-Circle        | ✅           | ✅            | ✅           | ✅            | ✅           |               |
-Rectangle     | ✅           | ✅            | ✅           | ✅            | ✅           |               |
-Segment       | ✅           | ✅            | ✅           | ✅            |               |               |
-Polygon       | ✅           | ✅            | ✅           |               |               |               |
-Triangle      |               |               |               |               |               |               |
+Shape         | Point         | Circle        | Rectangle     | Segment       | Polygon       |
+------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+Point         | ✅           | ✅            | ✅           | ✅            | ✅           |
+Circle        | ✅           | ✅            | ✅           | ✅            | ✅           |
+Rectangle     | ✅           | ✅            | ✅           | ✅            | ✅           |
+Segment       | ✅           | ✅            | ✅           | ✅            | ✅           |
+Polygon       | ✅           | ✅            | ✅           | ✅            | ✅           |
+
 
 # API: bumpy
 
