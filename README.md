@@ -9,9 +9,9 @@ Shape         | Point         | Circle        | Rectangle     | Segment       | 
 ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
 Point         | ✅           | ✅            | ✅           | ✅            | ✅           |               |
 Circle        | ✅           | ✅            | ✅           | ✅            | ✅           |               |
-Rectangle     | ✅           | ✅            | ✅           | ✅            |               |               |
+Rectangle     | ✅           | ✅            | ✅           | ✅            | ✅           |               |
 Segment       | ✅           | ✅            | ✅           | ✅            |               |               |
-Polygon       | ✅           | ✅            |               |               |               |               |
+Polygon       | ✅           | ✅            | ✅           |               |               |               |
 Triangle      |               |               |               |               |               |               |
 
 # API: bumpy

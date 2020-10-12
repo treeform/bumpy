@@ -172,16 +172,17 @@ proc overlap*(r: Rect, s: Segment): bool =
   ## Test overlap: rectangle vs segment.
   overlap(s, r)
 
+iterator pairwise[T](s: seq[T]): (T, T) =
+  ## Return elements in pairs: (1st, 2nd), (2nd, 3rd) ... (last, 1st).
+  for i in 0 ..< s.len:
+    yield(s[i], s[(i + 1) mod s.len])
+
 proc overlap*(poly: seq[Vec2], p: Vec2): bool =
   ## Test overlap: polygon vs point.
   var collision = false
 
   # Go through each of the vertices and the next vertex in the polygon.
-  for i in 0 ..< poly.len:
-    let
-      vc = poly[i]                      # c for "current"
-      vn = poly[(i + 1) mod poly.len]   # n for "next"
-
+  for vc, vn in poly.pairwise:
     # Compare position, flip 'collision' variable back and forth.
     if ((vc.y >= p.y and vn.y < p.y) or (vc.y < p.y and vn.y >= p.y)) and (p.x < (vn.x - vc.x) * (p.y - vc.y) / (vn.y - vc.y) + vc.x):
       collision = not collision
@@ -192,16 +193,11 @@ proc overlap*(p: Vec2, poly: seq[Vec2]): bool =
   ## Test overlap: point vs polygon.
   overlap(poly, p)
 
-
 proc overlap*(poly: seq[Vec2], c: Circle): bool =
   ## Test overlap: polygon vs circle.
 
   # Go through each of the vertices and the next vertex in the polygon.
-  for i in 0 ..< poly.len:
-    let
-      vc = poly[i]                      # c for "current"
-      vn = poly[(i + 1) mod poly.len]   # n for "next"
-
+  for vc, vn in poly.pairwise:
     # check for collision between the circle and
     # a line formed between the two vertices
     if overlap(segment(vc, vn), c):
@@ -213,3 +209,15 @@ proc overlap*(poly: seq[Vec2], c: Circle): bool =
 proc overlap*(c: Circle, poly: seq[Vec2]): bool =
   ## Test overlap: circle vs polygon.
   overlap(poly, c)
+
+proc overlap*(poly: seq[Vec2], r: Rect): bool =
+  ## Test overlap: polygon vs rect.
+  for vc, vn in poly.pairwise:
+    if overlap(segment(vc, vn), r):
+      return true
+  # Test if the rectangle is inside the polygon.
+  return overlap(poly, vec2(r.x, r.y))
+
+proc overlap*(r: Rect, poly: seq[Vec2]): bool =
+  ## Test overlap: rect vs polygon.
+  overlap(r, poly)
