@@ -12,7 +12,7 @@ s.b.y = 400
 proc drawMain() =
   a.pos = mouse.pos
 
-  group "pointA":
+  group "circle":
     box a.pos.x-a.radius, a.pos.y-a.radius, a.radius*2, a.radius*2
     cornerRadius a.radius
     fill "#2ecc71", 0.75

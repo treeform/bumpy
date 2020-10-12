@@ -7,11 +7,11 @@ Supported collisions:
 
 Shape         | Point         | Circle        | Rectangle     | Segment       | Polygon       | Triangle      |
 ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-Point         | ✅           | ✅           | ✅           | ✅           | ✅           |               |
-Circle        | ✅           | ✅           | ✅           | ✅           |               |               |
-Rectangle     | ✅           | ✅           | ✅           | ✅           |               |               |
-Segment       | ✅           | ✅           | ✅           | ✅           |               |               |
-Polygon       | ✅           |               |               |               |               |               |
+Point         | ✅           | ✅            | ✅           | ✅            | ✅           |               |
+Circle        | ✅           | ✅            | ✅           | ✅            | ✅           |               |
+Rectangle     | ✅           | ✅            | ✅           | ✅            |               |               |
+Segment       | ✅           | ✅            | ✅           | ✅            |               |               |
+Polygon       | ✅           | ✅            |               |               |               |               |
 Triangle      |               |               |               |               |               |               |
 
 # API: bumpy

@@ -22,26 +22,26 @@ proc overlap*(a, b: Vec2): bool =
   a == b
 
 proc overlap*(a: Vec2, b: Circle): bool =
-  ## Does point overlap a circle?
+  ## Test overlap: point vs circle.
   a.dist(b.pos) <= b.radius
 
 proc overlap*(a: Circle, b: Vec2): bool =
-  ## Does circle overlap a point?
+  ## Test overlap: circle vs point.
   overlap(b, a)
 
 proc overlap*(a, b: Circle): bool =
-  ## Do two circles overlap?
+  ## Test overlap: circle vs circle.
   a.pos.dist(b.pos) <= b.radius + a.radius
 
 proc overlap*(a: Vec2, b: Rect): bool =
-  ## Does point overlap a rectangle?
+  ## Test overlap: point vs rectangle.
   a.x >= b.x and # Right of the left edge AND
   a.x <= b.x + b.w and # left of the right edge AND
   a.y >= b.y and # below the top AND
   a.y <= b.y + b.h # above the bottom.
 
 proc overlap*(a: Rect, b: Vec2): bool =
-  ## Does a rect overlap a point?
+  ## Test overlap: rect vs point.
   overlap(b, a)
 
 proc overlap*(a, b: Rect): bool =
@@ -52,7 +52,7 @@ proc overlap*(a, b: Rect): bool =
   a.y <= b.y + b.h # A bottom edge past b top?
 
 proc overlap*(a: Circle, b: Rect): bool =
-  ## Does a circle overlap a rectangle?
+  ## Test overlap: circle vs rectangle.
   var
     testX = a.pos.x
     testY = a.pos.y
@@ -78,11 +78,11 @@ proc overlap*(a: Circle, b: Rect): bool =
   distance <= a.radius
 
 proc overlap*(a: Rect, b: Circle): bool =
-  ## Does a rect overlap a circle?
+  ## Test overlap: rect vs circle.
   overlap(b, a)
 
 proc overlap*(a: Vec2, s: Segment, buffer = 0.1): bool =
-  ## Does a point overlap a segment?
+  ## Test overlap: point vs segment.
 
   # Get distance from the point to the two ends of the line.
   let
@@ -100,11 +100,11 @@ proc overlap*(a: Vec2, s: Segment, buffer = 0.1): bool =
   d1 + d2 <= lineLen + buffer
 
 proc overlap*(a: Segment, b: Vec2, buffer = 0.1): bool =
-  ## Does a segment overlap a point?
+  ## Test overlap: segment vs point.
   overlap(b, a, buffer)
 
 proc overlap*(c: Circle, s: Segment): bool =
-  ## Does a circle overlap a segment?
+  ## Test overlap: circle vs segment.
 
   # If either end inside the circle return.
   if overlap(s.a, c) or overlap(s.b, c):
@@ -133,11 +133,11 @@ proc overlap*(c: Circle, s: Segment): bool =
   distance <= c.radius
 
 proc overlap*(s: Segment, c: Circle): bool =
-  ## Does a circle overlap a segment?
+  ## Test overlap: circle vs segment.
   overlap(c, s)
 
 proc overlap*(d, s: Segment): bool =
-  ## Do two segments overlap?
+  ## Test overlap: segment vs segment.
 
   # Calculate the distance to intersection point.
   let
@@ -152,7 +152,7 @@ proc overlap*(d, s: Segment): bool =
   uA >= 0 and uA <= 1 and uB >= 0 and uB <= 1
 
 proc overlap*(s: Segment, r: Rect): bool =
-  ## Does a segments overlap a rectangle?
+  ## Test overlap: segments vs rectangle.
 
   # Check if start or end of the segment is indie the rectangle.
   if overlap(s.a, r) or overlap(s.b, r):
@@ -169,11 +169,11 @@ proc overlap*(s: Segment, r: Rect): bool =
   left or right or top or bottom
 
 proc overlap*(r: Rect, s: Segment): bool =
-  ## Does a rectangle overlap a segment?
+  ## Test overlap: rectangle vs segment.
   overlap(s, r)
 
 proc overlap*(poly: seq[Vec2], p: Vec2): bool =
-  ## Does a polygon overlap a point?
+  ## Test overlap: polygon vs point.
   var collision = false
 
   # Go through each of the vertices and the next vertex in the polygon.
@@ -189,5 +189,27 @@ proc overlap*(poly: seq[Vec2], p: Vec2): bool =
   collision
 
 proc overlap*(p: Vec2, poly: seq[Vec2]): bool =
-  ## Does a point overlap a polygon?
+  ## Test overlap: point vs polygon.
   overlap(poly, p)
+
+
+proc overlap*(poly: seq[Vec2], c: Circle): bool =
+  ## Test overlap: polygon vs circle.
+
+  # Go through each of the vertices and the next vertex in the polygon.
+  for i in 0 ..< poly.len:
+    let
+      vc = poly[i]                      # c for "current"
+      vn = poly[(i + 1) mod poly.len]   # n for "next"
+
+    # check for collision between the circle and
+    # a line formed between the two vertices
+    if overlap(segment(vc, vn), c):
+      return true
+
+  # Test of circle is inside:
+  overlap(poly, c.pos);
+
+proc overlap*(c: Circle, poly: seq[Vec2]): bool =
+  ## Test overlap: circle vs polygon.
+  overlap(poly, c)
