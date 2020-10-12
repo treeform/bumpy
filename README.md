@@ -62,7 +62,7 @@ proc overlap(a, b: Vec2): bool
 
 ## **proc** overlap
 
-Does point overlap a circle?
+Test overlap: point vs circle.
 
 ```nim
 proc overlap(a: Vec2; b: Circle): bool
@@ -70,7 +70,7 @@ proc overlap(a: Vec2; b: Circle): bool
 
 ## **proc** overlap
 
-Does circle overlap a point?
+Test overlap: circle vs point.
 
 ```nim
 proc overlap(a: Circle; b: Vec2): bool
@@ -78,7 +78,7 @@ proc overlap(a: Circle; b: Vec2): bool
 
 ## **proc** overlap
 
-Do two circles overlap?
+Test overlap: circle vs circle.
 
 ```nim
 proc overlap(a, b: Circle): bool
@@ -86,7 +86,7 @@ proc overlap(a, b: Circle): bool
 
 ## **proc** overlap
 
-Does point overlap a rectangle?
+Test overlap: point vs rectangle.
 
 ```nim
 proc overlap(a: Vec2; b: Rect): bool
@@ -94,7 +94,7 @@ proc overlap(a: Vec2; b: Rect): bool
 
 ## **proc** overlap
 
-Does a rect overlap a point?
+Test overlap: rect vs point.
 
 ```nim
 proc overlap(a: Rect; b: Vec2): bool
@@ -110,7 +110,7 @@ proc overlap(a, b: Rect): bool
 
 ## **proc** overlap
 
-Does a circle overlap a rectangle?
+Test overlap: circle vs rectangle.
 
 ```nim
 proc overlap(a: Circle; b: Rect): bool
@@ -118,7 +118,7 @@ proc overlap(a: Circle; b: Rect): bool
 
 ## **proc** overlap
 
-Does a rect overlap a circle?
+Test overlap: rect vs circle.
 
 ```nim
 proc overlap(a: Rect; b: Circle): bool
@@ -126,7 +126,7 @@ proc overlap(a: Rect; b: Circle): bool
 
 ## **proc** overlap
 
-Does a point overlap a segment?
+Test overlap: point vs segment.
 
 ```nim
 proc overlap(a: Vec2; s: Segment; buffer = 0.1): bool
@@ -134,7 +134,7 @@ proc overlap(a: Vec2; s: Segment; buffer = 0.1): bool
 
 ## **proc** overlap
 
-Does a segment overlap a point?
+Test overlap: segment vs point.
 
 ```nim
 proc overlap(a: Segment; b: Vec2; buffer = 0.1): bool
@@ -142,7 +142,7 @@ proc overlap(a: Segment; b: Vec2; buffer = 0.1): bool
 
 ## **proc** overlap
 
-Does a circle overlap a segment?
+Test overlap: circle vs segment.
 
 ```nim
 proc overlap(c: Circle; s: Segment): bool
@@ -150,7 +150,7 @@ proc overlap(c: Circle; s: Segment): bool
 
 ## **proc** overlap
 
-Does a circle overlap a segment?
+Test overlap: circle vs segment.
 
 ```nim
 proc overlap(s: Segment; c: Circle): bool
@@ -158,7 +158,7 @@ proc overlap(s: Segment; c: Circle): bool
 
 ## **proc** overlap
 
-Do two segments overlap?
+Test overlap: segment vs segment.
 
 ```nim
 proc overlap(d, s: Segment): bool
@@ -166,7 +166,7 @@ proc overlap(d, s: Segment): bool
 
 ## **proc** overlap
 
-Does a segments overlap a rectangle?
+Test overlap: segments vs rectangle.
 
 ```nim
 proc overlap(s: Segment; r: Rect): bool
@@ -174,7 +174,7 @@ proc overlap(s: Segment; r: Rect): bool
 
 ## **proc** overlap
 
-Does a rectangle overlap a segment?
+Test overlap: rectangle vs segment.
 
 ```nim
 proc overlap(r: Rect; s: Segment): bool
@@ -182,7 +182,7 @@ proc overlap(r: Rect; s: Segment): bool
 
 ## **proc** overlap
 
-Does a polygon overlap a point?
+Test overlap: polygon vs point.
 
 ```nim
 proc overlap(poly: seq[Vec2]; p: Vec2): bool
@@ -190,8 +190,64 @@ proc overlap(poly: seq[Vec2]; p: Vec2): bool
 
 ## **proc** overlap
 
-Does a point overlap a polygon?
+Test overlap: point vs polygon.
 
 ```nim
 proc overlap(p: Vec2; poly: seq[Vec2]): bool
+```
+
+## **proc** overlap
+
+Test overlap: polygon vs circle.
+
+```nim
+proc overlap(poly: seq[Vec2]; c: Circle): bool
+```
+
+## **proc** overlap
+
+Test overlap: circle vs polygon.
+
+```nim
+proc overlap(c: Circle; poly: seq[Vec2]): bool
+```
+
+## **proc** overlap
+
+Test overlap: polygon vs rect.
+
+```nim
+proc overlap(poly: seq[Vec2]; r: Rect): bool
+```
+
+## **proc** overlap
+
+Test overlap: rect vs polygon.
+
+```nim
+proc overlap(r: Rect; poly: seq[Vec2]): bool
+```
+
+## **proc** overlap
+
+Test overlap: polygon vs segment.
+
+```nim
+proc overlap(poly: seq[Vec2]; s: Segment): bool
+```
+
+## **proc** overlap
+
+Test overlap: segment vs polygon.
+
+```nim
+proc overlap(s: Segment; poly: seq[Vec2]): bool
+```
+
+## **proc** overlap
+
+Test overlap: polygon vs segment.
+
+```nim
+proc overlap(a: seq[Vec2]; b: seq[Vec2]): bool
 ```
