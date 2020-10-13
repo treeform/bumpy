@@ -257,7 +257,7 @@ proc overlap*(s: Segment, poly: seq[Vec2]): bool =
   overlap(poly, s)
 
 proc overlap*(a: seq[Vec2], b: seq[Vec2]): bool =
-  ## Test overlap: polygon vs segment.
+  ## Test overlap: polygon vs polygon.
   for a1, a2 in a.pairwise:
     for b1, b2 in b.pairwise:
       if overlap(segment(a1, a2), segment(b1, b2)):
