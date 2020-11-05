@@ -177,7 +177,7 @@ iterator pairwise[T](s: seq[T]): (T, T) =
   for i in 0 ..< s.len:
     yield(s[i], s[(i + 1) mod s.len])
 
-proc overlapTri(tri: seq[Vec2], p: Vec2): bool =
+proc overlapTri*(tri: seq[Vec2], p: Vec2): bool =
   ## Optimization for triangles:
 
   # get the area of the triangle
