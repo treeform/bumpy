@@ -1,5 +1,3 @@
-## Put your tests here.
-
 import vmath
 
 type
