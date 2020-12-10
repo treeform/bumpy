@@ -4,25 +4,25 @@ var
   d: Segment
   s: Segment
 
-d.a.x = 300
-d.a.y = 300
+d.at.x = 300
+d.at.y = 300
 
-s.a.x = 50
-s.a.y = 100
-s.b.x = 300
-s.b.y = 400
+s.at.x = 50
+s.at.y = 100
+s.to.x = 300
+s.to.y = 400
 
 proc drawMain() =
-  d.b = mouse.pos
+  d.to = mouse.pos
 
-  ctx.line(d.a, d.b, parseHtmlColor("#2ecc71"))
+  ctx.line(d.at, d.to, parseHtmlColor("#2ecc71"))
 
   let color =
     if overlap(d, s):
       parseHtmlColor("#e74c3c")
     else:
       parseHtmlColor("#3498db")
-  ctx.line(s.a, s.b, color)
+  ctx.line(s.at, s.to, color)
 
 windowFrame = vec2(600, 600)
 startFidget(drawMain)

@@ -3,10 +3,10 @@ import chroma, bumpy, fidget, fidget/openglbackend, fidget/opengl/context, vmath
 var
   a: Vec2
   s: Segment
-s.a.x = 50
-s.a.y = 100
-s.b.x = 300
-s.b.y = 400
+s.at.x = 50
+s.at.y = 100
+s.to.x = 300
+s.to.y = 400
 
 proc drawMain() =
   a = mouse.pos
@@ -22,7 +22,7 @@ proc drawMain() =
     else:
       parseHtmlColor("#3498db")
 
-  ctx.line(s.a, s.b, color)
+  ctx.line(s.at, s.to, color)
 
 windowFrame = vec2(600, 600)
 startFidget(drawMain)
