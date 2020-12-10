@@ -1,4 +1,4 @@
-import vmath
+import strformat, vmath
 
 type
   Circle* = object
@@ -8,6 +8,79 @@ type
   Segment* = object
     at*: Vec2
     to*: Vec2
+
+  Rect* = object
+    x*: float32
+    y*: float32
+    w*: float32
+    h*: float32
+
+proc rect*(x, y, w, h: float32): Rect {.inline.} =
+  result.x = x
+  result.y = y
+  result.w = w
+  result.h = h
+
+proc rect*(pos, size: Vec2): Rect {.inline.} =
+  result.x = pos.x
+  result.y = pos.y
+  result.w = size.x
+  result.h = size.y
+
+proc xy*(rect: Rect): Vec2 {.inline.} =
+  ## Gets the xy as a Vec2.
+  vec2(rect.x, rect.y)
+
+proc `xy=`*(rect: var Rect, v: Vec2) {.inline.} =
+  ## Sets the xy from Vec2.
+  rect.x = v.x
+  rect.y = v.y
+
+proc wh*(rect: Rect): Vec2 {.inline.} =
+  ## Gets the wh as a Vec2.
+  vec2(rect.w, rect.h)
+
+proc `wh=`*(rect: var Rect, v: Vec2) {.inline.} =
+  ## Sets the wh from Vec2.
+  rect.w = v.x
+  rect.h = v.y
+
+proc `*`*(r: Rect, v: float): Rect =
+  ## * all elements of a Rect.
+  rect(r.x * v, r.y * v, r.w * v, r.h * v)
+
+proc `/`*(r: Rect, v: float): Rect =
+  ## / all elements of a Rect.
+  rect(r.x / v, r.y / v, r.w / v, r.h / v)
+
+proc `+`*(a, b: Rect): Rect =
+  ## Add two boxes together.
+  result.x = a.x + b.x
+  result.y = a.y + b.y
+  result.w = a.w
+  result.h = a.h
+
+proc `$`*(a: Rect): string =
+  &"({a.x}, {a.y}: {a.w} x {a.h})"
+
+proc inside*(pos: Vec2, rect: Rect): bool =
+  ## Checks if pos is inside rect.
+  (rect.x <= pos.x and pos.x <= rect.x + rect.w) and
+  (rect.y <= pos.y and pos.y <= rect.y + rect.h)
+
+proc `or`*(a, b: Rect): Rect =
+  ## Union of two rectangles.
+  result.x = min(a.x, b.x)
+  result.y = min(a.y, b.y)
+  result.w = max(a.x + a.w, b.x + b.w) - result.x
+  result.h = max(a.y + a.h, b.y + b.h) - result.y
+
+proc `and`*(a, b: Rect): Rect =
+  ## Intersection of two rectangles.
+  result.x = max(a.x, b.x)
+  result.y = max(a.y, b.y)
+  result.w = min(a.x + a.w, b.x + b.w) - result.x
+  result.h = min(a.y + a.h, b.y + b.h) - result.y
 
 proc circle*(pos: Vec2, radius: float32): Circle {.inline.} =
   Circle(pos: pos, radius: radius)
