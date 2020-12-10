@@ -115,7 +115,7 @@ proc overlap*(c: Circle, s: Segment): bool =
   let dot = (
     (c.pos.x - s.at.x) * (s.to.x - s.at.x) +
     (c.pos.y - s.at.y) * (s.to.y - s.at.y)
-  ) / pow(len,2)
+  ) / pow(len, 2)
 
   # Find the closest point on the line.
   let closest = s.at + (dot * (s.to - s.at))
@@ -158,9 +158,9 @@ proc overlap*(s: Segment, r: Rect): bool =
 
   # Check if the line has hit any of the rectangle's sides.
   let
-    left =   overlap(s, segment(vec2(r.x, r.y), vec2(r.x, r.y + r.h)))
-    right =  overlap(s, segment(vec2(r.x + r.w, r.y), vec2(r.x + r.w, r.y + r.h)))
-    top =    overlap(s, segment(vec2(r.x, r.y), vec2(r.x + r.w, r.y)))
+    left = overlap(s, segment(vec2(r.x, r.y), vec2(r.x, r.y + r.h)))
+    right = overlap(s, segment(vec2(r.x + r.w, r.y), vec2(r.x + r.w, r.y + r.h)))
+    top = overlap(s, segment(vec2(r.x, r.y), vec2(r.x + r.w, r.y)))
     bottom = overlap(s, segment(vec2(r.x, r.y + r.h), vec2(r.x + r.w, r.y + r.h)))
 
   # If any of the above are true, the line has hit the rectangle.
@@ -179,14 +179,17 @@ proc overlapTri(tri: seq[Vec2], p: Vec2): bool =
   ## Optimization for triangles:
 
   # get the area of the triangle
-  let areaOrig = abs((tri[1].x-tri[0].x)*(tri[2].y-tri[0].y) - (tri[2].x-tri[0].x)*(tri[1].y-tri[0].y))
+  let areaOrig = abs(
+    (tri[1].x - tri[0].x) * (tri[2].y - tri[0].y) -
+    (tri[2].x - tri[0].x) * (tri[1].y-tri[0].y)
+  )
 
   # get the area of 3 triangles made between the point
   # and the corners of the triangle
   let
-    area1 = abs((tri[0].x-p.x)*(tri[1].y-p.y) - (tri[1].x-p.x)*(tri[0].y-p.y))
-    area2 = abs((tri[1].x-p.x)*(tri[2].y-p.y) - (tri[2].x-p.x)*(tri[1].y-p.y))
-    area3 = abs((tri[2].x-p.x)*(tri[0].y-p.y) - (tri[0].x-p.x)*(tri[2].y-p.y))
+    area1 = abs((tri[0].x - p.x) * (tri[1].y - p.y) - (tri[1].x - p.x) * (tri[0].y - p.y))
+    area2 = abs((tri[1].x - p.x) * (tri[2].y - p.y) - (tri[2].x - p.x) * (tri[1].y - p.y))
+    area3 = abs((tri[2].x - p.x) * (tri[0].y - p.y) - (tri[0].x - p.x) * (tri[2].y - p.y))
 
   # If the sum of the three areas equals the original,
   # we're inside the triangle!
@@ -202,8 +205,7 @@ proc overlap*(poly: seq[Vec2], p: Vec2): bool =
   # Go through each of the vertices and the next vertex in the polygon.
   for vc, vn in poly.pairwise:
     # Compare position, flip 'collision' variable back and forth.
-    if
-      ((vc.y >= p.y and vn.y < p.y) or (vc.y < p.y and vn.y >= p.y)) and
+    if ((vc.y >= p.y and vn.y < p.y) or (vc.y < p.y and vn.y >= p.y)) and
       (p.x < (vn.x - vc.x) * (p.y - vc.y) / (vn.y - vc.y) + vc.x):
         collision = not collision
 
@@ -224,7 +226,7 @@ proc overlap*(poly: seq[Vec2], c: Circle): bool =
       return true
 
   # Test of circle is inside:
-  overlap(poly, c.pos);
+  overlap(poly, c.pos)
 
 proc overlap*(c: Circle, poly: seq[Vec2]): bool {.inline.} =
   ## Test overlap: circle vs polygon.

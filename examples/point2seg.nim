@@ -1,4 +1,4 @@
-import chroma, bumpy, fidget, fidget/openglbackend, fidget/opengl/context, vmath
+import bumpy, chroma, fidget, fidget/opengl/context, fidget/openglbackend, vmath
 
 var
   a: Vec2

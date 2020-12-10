@@ -1,9 +1,8 @@
-import bumpy, fidget, fidget/openglbackend, fidget/opengl/context, vmath
+import bumpy, fidget, fidget/opengl/context, fidget/openglbackend, vmath
 
 var
   poly: seq[Vec2]
   s: Segment
-
 
 s.at.x = 100
 s.at.y = 100

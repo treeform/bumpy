@@ -1,4 +1,4 @@
-import vmath, fidget, bumpy
+import bumpy, fidget, vmath
 
 var a, b: Vec2
 b.x = 300
