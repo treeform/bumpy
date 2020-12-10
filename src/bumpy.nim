@@ -6,24 +6,24 @@ type
     radius*: float32
 
   Segment* = object
-    a*: Vec2
-    b*: Vec2
+    at*: Vec2
+    to*: Vec2
 
-proc circle*(pos: Vec2, radius: float32): Circle =
+proc circle*(pos: Vec2, radius: float32): Circle {.inline.} =
   Circle(pos: pos, radius: radius)
 
-proc segment*(a, b: Vec2): Segment =
-  Segment(a: a, b: b)
+proc segment*(at, to: Vec2): Segment {.inline.} =
+  Segment(at: at, to: to)
 
-proc overlap*(a, b: Vec2): bool =
+proc overlap*(a, b: Vec2): bool {.inline.} =
   ## Do two points overlap? (Must be exactly equal.)
   a == b
 
-proc overlap*(a: Vec2, b: Circle): bool =
+proc overlap*(a: Vec2, b: Circle): bool {.inline.} =
   ## Test overlap: point vs circle.
   a.dist(b.pos) <= b.radius
 
-proc overlap*(a: Circle, b: Vec2): bool =
+proc overlap*(a: Circle, b: Vec2): bool {.inline.} =
   ## Test overlap: circle vs point.
   overlap(b, a)
 
@@ -38,7 +38,7 @@ proc overlap*(a: Vec2, b: Rect): bool =
   a.y >= b.y and # below the top AND
   a.y <= b.y + b.h # above the bottom.
 
-proc overlap*(a: Rect, b: Vec2): bool =
+proc overlap*(a: Rect, b: Vec2): bool {.inline.} =
   ## Test overlap: rect vs point.
   overlap(b, a)
 
@@ -75,7 +75,7 @@ proc overlap*(a: Circle, b: Rect): bool =
   # If the distance is less than the radius, collision!
   distance <= a.radius
 
-proc overlap*(a: Rect, b: Circle): bool =
+proc overlap*(a: Rect, b: Circle): bool {.inline.} =
   ## Test overlap: rect vs circle.
   overlap(b, a)
 
@@ -84,11 +84,11 @@ proc overlap*(a: Vec2, s: Segment, buffer = 0.1): bool =
 
   # Get distance from the point to the two ends of the line.
   let
-    d1 = dist(a, s.a)
-    d2 = dist(a, s.b)
+    d1 = dist(a, s.at)
+    d2 = dist(a, s.to)
 
   # Get the length of the line.
-    lineLen = dist(s.a, s.b)
+    lineLen = dist(s.at, s.to)
 
   # If the two distances are equal to the line's
   # length, the point is on the line!
@@ -97,7 +97,7 @@ proc overlap*(a: Vec2, s: Segment, buffer = 0.1): bool =
   d1 + d2 >= lineLen - buffer and
   d1 + d2 <= lineLen + buffer
 
-proc overlap*(a: Segment, b: Vec2, buffer = 0.1): bool =
+proc overlap*(a: Segment, b: Vec2, buffer = 0.1): bool {.inline.} =
   ## Test overlap: segment vs point.
   overlap(b, a, buffer)
 
@@ -105,20 +105,20 @@ proc overlap*(c: Circle, s: Segment): bool =
   ## Test overlap: circle vs segment.
 
   # If either end inside the circle return.
-  if overlap(s.a, c) or overlap(s.b, c):
+  if overlap(s.at, c) or overlap(s.at, c):
     return true
 
   # Get length of the line.
-  let len = s.a.dist(s.b)
+  let len = s.at.dist(s.to)
 
   # Get dot product of the line and circle.
   let dot = (
-    (c.pos.x - s.a.x) * (s.b.x - s.a.x) +
-    (c.pos.y - s.a.y) * (s.b.y - s.a.y)
-  ) / pow(len,2)
+    (c.pos.x - s.at.x) * (s.to.x - s.at.x) +
+    (c.pos.y - s.at.y) * (s.to.y - s.at.y)
+  ) / pow(len, 2)
 
   # Find the closest point on the line.
-  let closest = s.a + (dot * (s.b - s.a))
+  let closest = s.at + (dot * (s.to - s.at))
 
   # Is this point actually on the line segment?
   let onSegment = overlap(closest, s)
@@ -130,7 +130,7 @@ proc overlap*(c: Circle, s: Segment): bool =
 
   distance <= c.radius
 
-proc overlap*(s: Segment, c: Circle): bool =
+proc overlap*(s: Segment, c: Circle): bool {.inline.} =
   ## Test overlap: circle vs segment.
   overlap(c, s)
 
@@ -139,10 +139,10 @@ proc overlap*(d, s: Segment): bool =
 
   # Calculate the distance to intersection point.
   let
-    uA1 = (s.b.x - s.a.x) * (d.a.y - s.a.y) - (s.b.y - s.a.y) * (d.a.x - s.a.x)
-    uB1 = (d.b.x - d.a.x) * (d.a.y - s.a.y) - (d.b.y - d.a.y) * (d.a.x - s.a.x)
-    uA2 = (s.b.y - s.a.y) * (d.b.x - d.a.x) - (s.b.x - s.a.x) * (d.b.y - d.a.y)
-    uB2 = (s.b.y - s.a.y) * (d.b.x - d.a.x) - (s.b.x - s.a.x) * (d.b.y - d.a.y)
+    uA1 = (s.to.x - s.at.x) * (d.at.y - s.at.y) - (s.to.y - s.at.y) * (d.at.x - s.at.x)
+    uB1 = (d.to.x - d.at.x) * (d.at.y - s.at.y) - (d.to.y - d.at.y) * (d.at.x - s.at.x)
+    uA2 = (s.to.y - s.at.y) * (d.to.x - d.at.x) - (s.to.x - s.at.x) * (d.to.y - d.at.y)
+    uB2 = (s.to.y - s.at.y) * (d.to.x - d.at.x) - (s.to.x - s.at.x) * (d.to.y - d.at.y)
     uA = uA1 / uA2
     uB = uB1 / uB2
 
@@ -153,20 +153,20 @@ proc overlap*(s: Segment, r: Rect): bool =
   ## Test overlap: segments vs rectangle.
 
   # Check if start or end of the segment is indie the rectangle.
-  if overlap(s.a, r) or overlap(s.b, r):
+  if overlap(s.at, r) or overlap(s.to, r):
     return true
 
   # Check if the line has hit any of the rectangle's sides.
   let
-    left =   overlap(s, segment(vec2(r.x, r.y), vec2(r.x, r.y + r.h)))
-    right =  overlap(s, segment(vec2(r.x + r.w, r.y), vec2(r.x + r.w, r.y + r.h)))
-    top =    overlap(s, segment(vec2(r.x, r.y), vec2(r.x + r.w, r.y)))
+    left = overlap(s, segment(vec2(r.x, r.y), vec2(r.x, r.y + r.h)))
+    right = overlap(s, segment(vec2(r.x + r.w, r.y), vec2(r.x + r.w, r.y + r.h)))
+    top = overlap(s, segment(vec2(r.x, r.y), vec2(r.x + r.w, r.y)))
     bottom = overlap(s, segment(vec2(r.x, r.y + r.h), vec2(r.x + r.w, r.y + r.h)))
 
   # If any of the above are true, the line has hit the rectangle.
   left or right or top or bottom
 
-proc overlap*(r: Rect, s: Segment): bool =
+proc overlap*(r: Rect, s: Segment): bool {.inline.} =
   ## Test overlap: rectangle vs segment.
   overlap(s, r)
 
@@ -179,14 +179,17 @@ proc overlapTri(tri: seq[Vec2], p: Vec2): bool =
   ## Optimization for triangles:
 
   # get the area of the triangle
-  let areaOrig = abs((tri[1].x-tri[0].x)*(tri[2].y-tri[0].y) - (tri[2].x-tri[0].x)*(tri[1].y-tri[0].y))
+  let areaOrig = abs(
+    (tri[1].x - tri[0].x) * (tri[2].y - tri[0].y) -
+    (tri[2].x - tri[0].x) * (tri[1].y-tri[0].y)
+  )
 
   # get the area of 3 triangles made between the point
   # and the corners of the triangle
   let
-    area1 = abs((tri[0].x-p.x)*(tri[1].y-p.y) - (tri[1].x-p.x)*(tri[0].y-p.y))
-    area2 = abs((tri[1].x-p.x)*(tri[2].y-p.y) - (tri[2].x-p.x)*(tri[1].y-p.y))
-    area3 = abs((tri[2].x-p.x)*(tri[0].y-p.y) - (tri[0].x-p.x)*(tri[2].y-p.y))
+    area1 = abs((tri[0].x - p.x) * (tri[1].y - p.y) - (tri[1].x - p.x) * (tri[0].y - p.y))
+    area2 = abs((tri[1].x - p.x) * (tri[2].y - p.y) - (tri[2].x - p.x) * (tri[1].y - p.y))
+    area3 = abs((tri[2].x - p.x) * (tri[0].y - p.y) - (tri[0].x - p.x) * (tri[2].y - p.y))
 
   # If the sum of the three areas equals the original,
   # we're inside the triangle!
@@ -202,14 +205,13 @@ proc overlap*(poly: seq[Vec2], p: Vec2): bool =
   # Go through each of the vertices and the next vertex in the polygon.
   for vc, vn in poly.pairwise:
     # Compare position, flip 'collision' variable back and forth.
-    if
-      ((vc.y >= p.y and vn.y < p.y) or (vc.y < p.y and vn.y >= p.y)) and
+    if ((vc.y >= p.y and vn.y < p.y) or (vc.y < p.y and vn.y >= p.y)) and
       (p.x < (vn.x - vc.x) * (p.y - vc.y) / (vn.y - vc.y) + vc.x):
         collision = not collision
 
   collision
 
-proc overlap*(p: Vec2, poly: seq[Vec2]): bool =
+proc overlap*(p: Vec2, poly: seq[Vec2]): bool {.inline.} =
   ## Test overlap: point vs polygon.
   overlap(poly, p)
 
@@ -224,9 +226,9 @@ proc overlap*(poly: seq[Vec2], c: Circle): bool =
       return true
 
   # Test of circle is inside:
-  overlap(poly, c.pos);
+  overlap(poly, c.pos)
 
-proc overlap*(c: Circle, poly: seq[Vec2]): bool =
+proc overlap*(c: Circle, poly: seq[Vec2]): bool {.inline.} =
   ## Test overlap: circle vs polygon.
   overlap(poly, c)
 
@@ -238,7 +240,7 @@ proc overlap*(poly: seq[Vec2], r: Rect): bool =
   # Test if the rectangle is inside the polygon.
   return overlap(poly, vec2(r.x, r.y))
 
-proc overlap*(r: Rect, poly: seq[Vec2]): bool =
+proc overlap*(r: Rect, poly: seq[Vec2]): bool {.inline.} =
   ## Test overlap: rect vs polygon.
   overlap(r, poly)
 
@@ -248,9 +250,9 @@ proc overlap*(poly: seq[Vec2], s: Segment): bool =
     if overlap(segment(vc, vn), s):
       return true
   # Test if the rectangle is inside the polygon.
-  return overlap(poly, s.a)
+  return overlap(poly, s.at)
 
-proc overlap*(s: Segment, poly: seq[Vec2]): bool =
+proc overlap*(s: Segment, poly: seq[Vec2]): bool {.inline.} =
   ## Test overlap: segment vs polygon.
   overlap(poly, s)
 
@@ -262,3 +264,18 @@ proc overlap*(a: seq[Vec2], b: seq[Vec2]): bool =
         return true
   # Test if the a polygon is inside the b polygon.
   return overlap(a[0], b)
+
+proc intersects*(a, b: Segment, at: var Vec2): bool {.inline.} =
+  ## Checks if the a segment intersects b segment.
+  ## If it returns true, at will have point of intersection
+  let
+    s1 = a.to - a.at
+    s2 = b.to - b.at
+    denominator = (-s2.x * s1.y + s1.x * s2.y)
+    s = (-s1.y * (a.at.x - b.at.x) + s1.x * (a.at.y - b.at.y)) / denominator
+    t = (s2.x * (a.at.y - b.at.y) - s2.y * (a.at.x - b.at.x)) / denominator
+
+  if s >= 0 and s < 1 and t >= 0 and t < 1:
+    at = a.at + (t * s1)
+    return true
+  return false
