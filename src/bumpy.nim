@@ -63,11 +63,6 @@ proc `+`*(a, b: Rect): Rect =
 proc `$`*(a: Rect): string =
   &"({a.x}, {a.y}: {a.w} x {a.h})"
 
-proc inside*(pos: Vec2, rect: Rect): bool =
-  ## Checks if pos is inside rect.
-  (rect.x <= pos.x and pos.x <= rect.x + rect.w) and
-  (rect.y <= pos.y and pos.y <= rect.y + rect.h)
-
 proc `or`*(a, b: Rect): Rect =
   ## Union of two rectangles.
   result.x = min(a.x, b.x)
