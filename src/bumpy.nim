@@ -89,7 +89,7 @@ proc segment*(at, to: Vec2): Segment {.inline.} =
   Segment(at: at, to: to)
 
 proc overlap*(a, b: Vec2): bool {.inline.} =
-  ## Do two points overlap? (Must be exactly equal.)
+  ## Test overlap: point vs point. (Must be exactly equal.)
   a == b
 
 proc overlap*(a: Vec2, b: Circle): bool {.inline.} =
@@ -116,7 +116,7 @@ proc overlap*(a: Rect, b: Vec2): bool {.inline.} =
   overlap(b, a)
 
 proc overlap*(a, b: Rect): bool =
-  ## Do two rectangles overlap?
+  ## Test overlap: rect vs rect.
   a.x + a.w >= b.x and # A right edge past b left?
   a.x <= b.x + b.w and # A left edge past b right?
   a.y + a.h >= b.y and # A top edge past b bottom?
