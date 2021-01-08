@@ -15,6 +15,10 @@ type
     w*: float32
     h*: float32
 
+  Line* = object
+    a*: Vec2
+    b*: Vec2
+
 proc rect*(x, y, w, h: float32): Rect {.inline.} =
   result.x = x
   result.y = y
@@ -333,6 +337,28 @@ proc overlap*(a: seq[Vec2], b: seq[Vec2]): bool =
   # Test if the a polygon is inside the b polygon.
   return overlap(a[0], b)
 
+proc overlap*(a, b: Line): bool {.inline.} =
+  ## Test overlap: line vs line.
+  let
+    s1 = a.b - a.a
+    s2 = b.b - b.a
+    denominator = (-s2.x * s1.y + s1.x * s2.y)
+  denominator != 0
+
+proc overlap*(l: Line, s: Segment): bool {.inline.} =
+  ## Test overlap: line vs seg.
+  let
+    s1 = l.b - l.a
+    s2 = s.to - s.at
+    denominator = (-s2.x * s1.y + s1.x * s2.y)
+    numerator = s1.x * (l.a.y - s.at.y) - s1.y * (l.a.x - s.at.x)
+    u = numerator / denominator
+  u >= 0 and u <= 1
+
+proc overlap*(s: Segment, l: Line): bool {.inline.} =
+  ## Test overlap: seg vs line.
+  overlap(l, s)
+
 proc intersects*(a, b: Segment, at: var Vec2): bool {.inline.} =
   ## Checks if the a segment intersects b segment.
   ## If it returns true, at will have point of intersection
@@ -346,4 +372,35 @@ proc intersects*(a, b: Segment, at: var Vec2): bool {.inline.} =
   if s >= 0 and s < 1 and t >= 0 and t < 1:
     at = a.at + (t * s1)
     return true
-  return false
+
+proc intersects*(a, b: Line, at: var Vec2): bool {.inline.} =
+  let
+    s1 = a.b - a.a
+    s2 = b.b - b.a
+    denominator = (-s2.x * s1.y + s1.x * s2.y)
+
+  if denominator == 0:
+    return false
+
+  let t = (s2.x * (a.a.y - b.a.y) - s2.y * (a.a.x - b.a.x)) / denominator
+  at = a.a + (t * s1)
+  true
+
+proc intersects*(l: Line, s: Segment, at: var Vec2): bool {.inline.} =
+  ## Checks if the line intersects the segment.
+  ## If it returns true, at will have point of intersection
+  let
+    s1 = l.b - l.a
+    s2 = s.to - s.at
+    denominator = (-s2.x * s1.y + s1.x * s2.y)
+    numerator = s1.x * (l.a.y - s.at.y) - s1.y * (l.a.x - s.at.x)
+    u = numerator / denominator
+
+  if u >= 0 and u <= 1:
+    at = s.at + (u * s2)
+    return true
+
+proc intersects*(s: Segment, l: Line, at: var Vec2): bool {.inline.} =
+  ## Checks if the line intersects the segment.
+  ## If it returns true, at will have point of intersection
+  intersects(l, s, at)
