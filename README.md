@@ -7,13 +7,14 @@ Based on the book http://www.jeffreythompson.org/collision-detection/table_of_co
 
 Supported collisions:
 
-Shape         | Point         | Circle        | Rectangle     | Segment       | Polygon       |
-------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-Point         | ✅           | ✅            | ✅           | ✅            | ✅           |
-Circle        | ✅           | ✅            | ✅           | ✅            | ✅           |
-Rectangle     | ✅           | ✅            | ✅           | ✅            | ✅           |
-Segment       | ✅           | ✅            | ✅           | ✅            | ✅           |
-Polygon       | ✅           | ✅            | ✅           | ✅            | ✅           |
+Shape         | Point         | Circle        | Rectangle     | Segment       | Polygon       | Line          |
+------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+Point         | ✅           | ✅            | ✅           | ✅            | ✅           |               |
+Circle        | ✅           | ✅            | ✅           | ✅            | ✅           |               |
+Rectangle     | ✅           | ✅            | ✅           | ✅            | ✅           |               |
+Segment       | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            |
+Polygon       | ✅           | ✅            | ✅           | ✅            | ✅           |               |
+Line          |              |                |               | ✅            |              | ✅            |
 
 
 # API: bumpy
@@ -49,6 +50,15 @@ Rect = object
  y*: float32
  w*: float32
  h*: float32
+```
+
+## **type** Line
+
+
+```nim
+Line = object
+ a*: Vec2
+ b*: Vec2
 ```
 
 ## **proc** rect
@@ -366,10 +376,57 @@ Test overlap: polygon vs polygon.
 proc overlap(a: seq[Vec2]; b: seq[Vec2]): bool
 ```
 
+## **proc** overlap
+
+Test overlap: line vs line.
+
+```nim
+proc overlap(a, b: Line): bool {.inline.}
+```
+
+## **proc** overlap
+
+Test overlap: line vs seg.
+
+```nim
+proc overlap(l: Line; s: Segment): bool {.inline.}
+```
+
+## **proc** overlap
+
+Test overlap: seg vs line.
+
+```nim
+proc overlap(s: Segment; l: Line): bool {.inline.}
+```
+
 ## **proc** intersects
 
 Checks if the a segment intersects b segment. If it returns true, at will have point of intersection
 
 ```nim
 proc intersects(a, b: Segment; at: var Vec2): bool {.inline, tags: [].}
+```
+
+## **proc** intersects
+
+
+```nim
+proc intersects(a, b: Line; at: var Vec2): bool {.inline.}
+```
+
+## **proc** intersects
+
+Checks if the line intersects the segment. If it returns true, at will have point of intersection
+
+```nim
+proc intersects(l: Line; s: Segment; at: var Vec2): bool {.inline, tags: [].}
+```
+
+## **proc** intersects
+
+Checks if the line intersects the segment. If it returns true, at will have point of intersection
+
+```nim
+proc intersects(s: Segment; l: Line; at: var Vec2): bool {.inline, tags: [].}
 ```
