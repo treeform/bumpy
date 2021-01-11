@@ -18,7 +18,7 @@ proc drawMain() =
     fill "#2ecc71", 0.75
 
   let color =
-    if overlap(poly, point):
+    if overlaps(poly, point):
       parseHtmlColor("#e74c3c")
     else:
       parseHtmlColor("#3498db")

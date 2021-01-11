@@ -19,7 +19,7 @@ proc drawMain() =
 
   group "rect":
     box r.x, r.y, r.w, r.h
-    if overlap(s, r):
+    if overlaps(s, r):
       fill "#e74c3c", 0.75
     else:
       fill "#3498db", 0.75
