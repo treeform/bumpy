@@ -15,7 +15,7 @@ proc drawMain() =
   group "pointB":
     box b.x-20, b.y-20, 40, 40
     cornerRadius 20
-    if overlap(a, b):
+    if overlaps(a, b):
       fill "#e74c3c", 0.75
     else:
       fill "#3498db", 0.75

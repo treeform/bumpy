@@ -18,7 +18,7 @@ proc drawMain() =
   ctx.line(s.at, s.to, parseHtmlColor("#2ecc71"))
 
   let color =
-    if overlap(poly, s):
+    if overlaps(poly, s):
       parseHtmlColor("#e74c3c")
     else:
       parseHtmlColor("#3498db")

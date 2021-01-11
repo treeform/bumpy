@@ -20,7 +20,7 @@ proc drawMain() =
 
   group "rectB":
     box b.x, b.y, b.w, b.h
-    if bumpy.overlap(a, b):
+    if overlaps(a, b):
       fill "#e74c3c", 0.75
     else:
       fill "#3498db", 0.75
