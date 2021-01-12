@@ -369,7 +369,7 @@ proc intersects*(a, b: Segment, at: var Vec2): bool {.inline.} =
     s = (-s1.y * (a.at.x - b.at.x) + s1.x * (a.at.y - b.at.y)) / denominator
     t = (s2.x * (a.at.y - b.at.y) - s2.y * (a.at.x - b.at.x)) / denominator
 
-  if s >= 0 and s < 1 and t >= 0 and t < 1:
+  if s >= 0 and s <= 1 and t >= 0 and t <= 1:
     at = a.at + (t * s1)
     return true
 
