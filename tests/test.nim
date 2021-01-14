@@ -43,3 +43,15 @@ block:
   var at: Vec2
   doAssert intersects(a, b, at)
   doAssert at == vec2(100, 100)
+
+block:
+  let
+    c = Circle(pos: vec2(0, 0), radius: 10)
+    s = Segment(at: vec2(0, 0), to: vec2(1, 1))
+  doAssert overlaps(c, s)
+
+block:
+  let
+    c = Circle(pos: vec2(20, 20), radius: 10)
+    s = Segment(at: vec2(0, 0), to: vec2(5, 5))
+  doAssert not overlaps(c, s)

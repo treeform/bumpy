@@ -177,11 +177,13 @@ proc overlaps*(c: Circle, s: Segment): bool =
   ## Test overlap: circle vs segment.
 
   # If either end inside the circle return.
-  if overlaps(s.at, c) or overlaps(s.at, c):
+  if overlaps(s.at, c) or overlaps(s.to, c):
     return true
 
   # Get length of the line.
   let len = s.at.dist(s.to)
+  if len == 0:
+    return false
 
   # Get dot product of the line and circle.
   let dot = (
