@@ -81,6 +81,13 @@ proc `and`*(a, b: Rect): Rect =
   result.w = min(a.x + a.w, b.x + b.w) - result.x
   result.h = min(a.y + a.h, b.y + b.h) - result.y
 
+proc `+=`*(s: var Segment, v: Vec2) {.inline.} =
+  s.at += v
+  s.to += v
+
+proc `*`*(m: Mat3, s: Segment): Segment {.inline.} =
+  Segment(at: m * s.at, to: m * s.to)
+
 proc circle*(pos: Vec2, radius: float32): Circle {.inline.} =
   Circle(pos: pos, radius: radius)
 
