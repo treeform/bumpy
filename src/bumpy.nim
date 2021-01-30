@@ -31,6 +31,10 @@ proc rect*(pos, size: Vec2): Rect {.inline.} =
   result.w = size.x
   result.h = size.y
 
+proc line*(a, b: Vec2): Line {.inline.} =
+  result.a = a
+  result.b = b
+
 proc xy*(rect: Rect): Vec2 {.inline.} =
   ## Gets the xy as a Vec2.
   vec2(rect.x, rect.y)
@@ -413,3 +417,6 @@ proc intersects*(s: Segment, l: Line, at: var Vec2): bool {.inline.} =
   ## Checks if the line intersects the segment.
   ## If it returns true, at will have point of intersection
   intersects(l, s, at)
+
+proc length*(s: Segment): float32 {.inline.} =
+  (s.at - s.to).length
