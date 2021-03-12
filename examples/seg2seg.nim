@@ -1,5 +1,4 @@
-import bumpy, chroma, fidget, fidget/opengl/context, fidget/openglbackend, vmath
-
+import bumpy, pixie/demo, vmath, chroma
 var
   d: Segment
   s: Segment
@@ -12,17 +11,20 @@ s.at.y = 100
 s.to.x = 300
 s.to.y = 400
 
-proc drawMain() =
-  d.to = mouse.pos
+start()
 
-  ctx.line(d.at, d.to, parseHtmlColor("#2ecc71"))
+while true:
+  screen.fill(rgba(255, 255, 255, 255))
 
-  let color =
+  d.to = getMousePos()
+  screen.strokeSegment(d, parseHtmlColor("#2ecc71"))
+
+  var color =
     if overlaps(d, s):
       parseHtmlColor("#e74c3c")
     else:
       parseHtmlColor("#3498db")
-  ctx.line(s.at, s.to, color)
+  color.a = 0.75
+  screen.strokeSegment(s, color)
 
-windowFrame = vec2(600, 600)
-startFidget(drawMain)
+  tick()

@@ -1,4 +1,4 @@
-import bumpy, fidget, vmath
+import bumpy, pixie/demo, vmath, chroma
 
 var
   a: Rect
@@ -10,20 +10,20 @@ b.y = 200
 b.w = 300
 b.h = 200
 
-proc drawMain() =
-  a.x = mouse.pos.x
-  a.y = mouse.pos.y
+start()
 
-  group "rectA":
-    box a.x, a.y, a.w, a.h
-    fill "#2ecc71", 0.75
+while true:
+  screen.fill(rgba(255, 255, 255, 255))
 
-  group "rectB":
-    box b.x, b.y, b.w, b.h
+  a.xy = getMousePos()
+  screen.fillRect(a, parseHtmlColor("#2ecc71"))
+
+  var color =
     if overlaps(a, b):
-      fill "#e74c3c", 0.75
+      parseHtmlColor("#e74c3c")
     else:
-      fill "#3498db", 0.75
+      parseHtmlColor("#3498db")
+  color.a = 0.75
+  screen.fillRect(b, color)
 
-windowFrame = vec2(600, 600)
-startFidget(drawMain)
+  tick()

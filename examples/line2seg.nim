@@ -1,4 +1,4 @@
-import bumpy, chroma, fidget, fidget/opengl/context, fidget/openglbackend, vmath
+import bumpy, pixie/demo, vmath, chroma
 
 # The lines always overlap unless you get them to be perfectly parallel.
 
@@ -9,29 +9,31 @@ var
 l.a.x = 0
 l.a.y = 100
 
-proc drawMain() =
+start()
+
+while true:
+  screen.fill(rgba(255, 255, 255, 255))
+
   s.at.x = 100
   s.at.y = 400
-  s.to.x = windowFrame.x - 100
-  s.to.y = 600
+  s.to.x = screen.width.float32 - 100
+  s.to.y = 500
 
-  l.b = mouse.pos
-
+  l.b = getMousePos()
   let windowEdge = Line(
-    a: vec2(windowFrame.x, 0),
-    b: vec2(windowFrame.x, windowFrame.y)
+    a: vec2(screen.width.float32, 0),
+    b: vec2(screen.width.float32, screen.height.float32)
   )
 
   var at: Vec2
   if intersects(windowEdge, l, at):
-    ctx.line(l.a, at, parseHtmlColor("#2ecc71"))
+    screen.strokeSegment(segment(l.a, at), parseHtmlColor("#2ecc71"))
 
   let color =
     if overlaps(l, s):
       parseHtmlColor("#e74c3c")
     else:
       parseHtmlColor("#3498db")
-  ctx.line(s.at, s.to, color)
+  screen.strokeSegment(segment(s.at, s.to), color)
 
-windowFrame = vec2(600, 600)
-startFidget(drawMain)
+  tick()

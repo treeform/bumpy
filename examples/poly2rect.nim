@@ -1,4 +1,4 @@
-import bumpy, fidget, fidget/opengl/context, fidget/openglbackend, vmath
+import bumpy, pixie/demo, pixie, vmath, chroma, common
 
 var
   poly: seq[Vec2]
@@ -12,20 +12,20 @@ poly.add(vec2(400, 130))
 poly.add(vec2(350, 300))
 poly.add(vec2(250, 330))
 
-proc drawMain() =
-  rect.x = mouse.pos.x
-  rect.y = mouse.pos.y
+start()
 
-  group "rect":
-    box rect.x, rect.y, rect.w, rect.h
-    fill "#2ecc71", 0.75
+while true:
+  screen.fill(rgba(255, 255, 255, 255))
 
-  let color =
+  rect.xy = getMousePos()
+  screen.fillRect(rect, parseHtmlColor("#2ecc71"))
+
+  var color =
     if overlaps(poly, rect):
       parseHtmlColor("#e74c3c")
     else:
       parseHtmlColor("#3498db")
-  ctx.linePolygon(poly, color)
+  color.a = 0.75
+  screen.fillPoly(poly, color)
 
-windowFrame = vec2(600, 600)
-startFidget(drawMain)
+  tick()

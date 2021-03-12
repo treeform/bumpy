@@ -1,5 +1,4 @@
-import bumpy, chroma, fidget, fidget/opengl/context, fidget/openglbackend, vmath
-
+import bumpy, pixie/demo, vmath, chroma
 var
   a: Circle
   s: Segment
@@ -9,21 +8,18 @@ s.at.y = 100
 s.to.x = 300
 s.to.y = 400
 
-proc drawMain() =
-  a.pos = mouse.pos
+start()
 
-  group "circle":
-    box a.pos.x-a.radius, a.pos.y-a.radius, a.radius*2, a.radius*2
-    cornerRadius a.radius
-    fill "#2ecc71", 0.75
+while true:
+  screen.fill(rgba(255, 255, 255, 255))
 
-  let color =
-    if overlaps(a, s):
-      parseHtmlColor("#e74c3c")
-    else:
-      parseHtmlColor("#3498db")
+  a.pos = getMousePos()
+  screen.fillCircle(a.pos, a.radius, parseHtmlColor("#2ecc71"))
 
-  ctx.line(s.at, s.to, color)
+  var color =
+    if overlaps(a, s): parseHtmlColor("#e74c3c")
+    else: parseHtmlColor("#3498db")
+  color.a = 0.75
+  screen.strokeSegment(s, color)
 
-windowFrame = vec2(600, 600)
-startFidget(drawMain)
+  tick()

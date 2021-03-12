@@ -1,28 +1,30 @@
-import bumpy, chroma, fidget, fidget/opengl/context, fidget/openglbackend, vmath
-
+import bumpy, pixie/demo, vmath, chroma
 var
   s: Segment
   r: Rect
 
-s.at.x = 10
-s.at.y = 10
+s.at.x = 400
+s.at.y = 100
 
 r.x = 150
 r.y = 200
 r.w = 300
 r.h = 200
 
-proc drawMain() =
-  s.to = mouse.pos
+start()
 
-  ctx.line(s.at, s.to, parseHtmlColor("#2ecc71"))
+while true:
+  screen.fill(rgba(255, 255, 255, 255))
 
-  group "rect":
-    box r.x, r.y, r.w, r.h
+  s.to = getMousePos()
+  screen.strokeSegment(segment(s.at, s.to), parseHtmlColor("#2ecc71"))
+
+  var color =
     if overlaps(s, r):
-      fill "#e74c3c", 0.75
+      parseHtmlColor("#e74c3c")
     else:
-      fill "#3498db", 0.75
+      parseHtmlColor("#3498db")
+  color.a = 0.75
+  screen.fillRect(r, color)
 
-windowFrame = vec2(600, 600)
-startFidget(drawMain)
+  tick()

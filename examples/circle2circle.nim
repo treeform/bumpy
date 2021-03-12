@@ -1,28 +1,25 @@
-import bumpy, fidget, vmath
+import bumpy, pixie/demo, vmath, chroma
 
 var
   a: Circle
   b: Circle
-a.radius = 200
+a.radius = 100
 b.pos.x = 300
 b.pos.y = 300
-b.radius = 100
+b.radius = 50
 
-proc drawMain() =
-  a.pos = mouse.pos
+start()
 
-  group "pointA":
-    box a.pos.x-a.radius, a.pos.y-a.radius, a.radius*2, a.radius*2
-    cornerRadius a.radius
-    fill "#2ecc71", 0.75
+while true:
+  screen.fill(rgba(255, 255, 255, 255))
 
-  group "pointB":
-    box b.pos.x-b.radius, b.pos.y-b.radius, b.radius*2, b.radius*2
-    cornerRadius b.radius
-    if overlaps(a, b):
-      fill "#e74c3c", 0.75
-    else:
-      fill "#3498db", 0.75
+  a.pos = getMousePos()
+  screen.fillCircle(a.pos, a.radius, parseHtmlColor("#2ecc71"))
 
-windowFrame = vec2(600, 600)
-startFidget(drawMain)
+  var color =
+    if overlaps(a, b): parseHtmlColor("#e74c3c")
+    else: parseHtmlColor("#3498db")
+  color.a = 0.75
+  screen.fillCircle(b.pos, b.radius, color)
+
+  tick()
