@@ -219,6 +219,36 @@ proc overlaps*(s: Segment, c: Circle): bool {.inline.} =
   ## Test overlap: circle vs segment.
   overlaps(c, s)
 
+proc overlaps*(c: Circle, l: Line): bool =
+  ## Test overlap: circle vs line.
+
+  # If either control point inside the circle return.
+  if overlaps(l.a, c) or overlaps(l.b, c):
+    return true
+
+  # Get length of the line.
+  let len = l.a.dist(l.b)
+  if len == 0:
+    return false
+
+  # Get dot product of the line and circle.
+  let dot = (
+    (c.pos.x - l.a.x) * (l.b.x - l.a.x) +
+    (c.pos.y - l.a.y) * (l.b.y - l.a.y)
+  ) / pow(len, 2)
+
+  # Find the closest point on the line.
+  let closest = l.a + (dot * (l.b - l.a))
+
+  # Get distance to closest point.
+  let distance = closest.dist(c.pos)
+
+  distance <= c.radius
+
+proc overlaps*(l: Line, c: Circle): bool {.inline.} =
+  ## Test overlap: circle vs line.
+  overlaps(c, l)
+
 proc overlaps*(d, s: Segment): bool =
   ## Test overlap: segment vs segment.
 
