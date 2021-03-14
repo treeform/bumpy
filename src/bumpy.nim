@@ -162,27 +162,27 @@ proc overlaps*(a: Rect, b: Circle): bool {.inline.} =
   ## Test overlap: rect vs circle.
   overlaps(b, a)
 
-proc overlaps*(a: Vec2, s: Segment, buffer = 0.1): bool =
+proc overlaps*(a: Vec2, s: Segment, fudge = 0.1): bool =
   ## Test overlap: point vs segment.
 
-  # Get distance from the point to the two ends of the line.
+  # Get distance from the point to the two ends of the segment.
   let
     d1 = dist(a, s.at)
     d2 = dist(a, s.to)
 
-  # Get the length of the line.
+  # Get the length of the segment.
     lineLen = dist(s.at, s.to)
 
-  # If the two distances are equal to the line's
-  # length, the point is on the line!
-  # Note we use the buffer here to give a range,
+  # If the two distances are equal to the segment's
+  # length, the point is on the segment!
+  # Note we use the fudge here to give a range,
   # rather than one #
-  d1 + d2 >= lineLen - buffer and
-  d1 + d2 <= lineLen + buffer
+  d1 + d2 >= lineLen - fudge and
+  d1 + d2 <= lineLen + fudge
 
-proc overlaps*(a: Segment, b: Vec2, buffer = 0.1): bool {.inline.} =
+proc overlaps*(a: Segment, b: Vec2, fudge = 0.1): bool {.inline.} =
   ## Test overlap: segment vs point.
-  overlaps(b, a, buffer)
+  overlaps(b, a, fudge)
 
 proc overlaps*(c: Circle, s: Segment): bool =
   ## Test overlap: circle vs segment.
@@ -371,6 +371,22 @@ proc overlaps*(l: Line, s: Segment): bool {.inline.} =
 proc overlaps*(s: Segment, l: Line): bool {.inline.} =
   ## Test overlap: seg vs line.
   overlaps(l, s)
+
+proc overlaps*(p: Vec2, l: Line, fudge = 0.1): bool {.inline.} =
+  ## Test overlap: point vs line.
+  let dir = l.a - l.b
+  if dir.x == 0:
+    # Line is vertical
+    return p.x == l.b.x
+  else:
+    let
+      m = dir.y / dir.x
+      b = l.a.y - m * l.a.x
+    return abs(p.y - (m * p.x + b)) < fudge
+
+proc overlaps*(l: Line, p: Vec2, fudge = 0.1): bool {.inline.} =
+  ## Test overlap: line vs point.
+  overlaps(p, l, fudge)
 
 proc intersects*(a, b: Segment, at: var Vec2): bool {.inline.} =
   ## Checks if the a segment intersects b segment.

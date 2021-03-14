@@ -10,7 +10,7 @@ while true:
   screen.fill(rgba(255, 255, 255, 255))
 
   a = getMousePos()
-  screen.fillCircle(a, 10, parseHtmlColor("#2ecc71"))
+  screen.strokeCircle(a, 10, parseHtmlColor("#2ecc71"))
 
   var color =
     if overlaps(a, b): parseHtmlColor("#e74c3c")

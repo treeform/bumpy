@@ -9,12 +9,12 @@ Supported collisions:
 
 Shape         | Point         | Circle        | Rectangle     | Segment       | Polygon       | Line          |
 ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-Point         | ✅           | ✅            | ✅           | ✅            | ✅           |               |
+Point         | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            |
 Circle        | ✅           | ✅            | ✅           | ✅            | ✅           |               |
 Rectangle     | ✅           | ✅            | ✅           | ✅            | ✅           |               |
 Segment       | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            |
 Polygon       | ✅           | ✅            | ✅           | ✅            | ✅           |               |
-Line          |              |                |               | ✅            |              | ✅            |
+Line          | ✅           |                |               | ✅            |              | ✅            |
 
 
 # API: bumpy
