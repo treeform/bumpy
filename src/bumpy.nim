@@ -1,4 +1,4 @@
-import strformat, vmath
+import strformat, vmath, algorithm
 
 type
   Circle* = object
@@ -98,17 +98,23 @@ proc circle*(pos: Vec2, radius: float32): Circle {.inline.} =
 proc segment*(at, to: Vec2): Segment {.inline.} =
   Segment(at: at, to: to)
 
-iterator segments(r: Rect): Segment =
+iterator segmentsClosed(r: Rect): Segment =
+  ## Returns all sides of the rect as segments.
   yield segment(vec2(r.x, r.y), vec2(r.x, r.y + r.h))
   yield segment(vec2(r.x + r.w, r.y), vec2(r.x + r.w, r.y + r.h))
   yield segment(vec2(r.x, r.y), vec2(r.x + r.w, r.y))
   yield segment(vec2(r.x, r.y + r.h), vec2(r.x + r.w, r.y + r.h))
 
-iterator segments(poly: seq[Vec2]): Segment =
+iterator segmentsClosed*(poly: seq[Vec2]): Segment =
+  ## Return elements in pairs: (1st, 2nd), (2nd, 3rd) ... (last, 1st).
   for i in 0 ..< poly.len - 1:
     yield segment(poly[i], poly[i+1])
   yield segment(poly[^1], poly[0])
 
+iterator segments*(s: seq[Vec2]): Segment =
+  ## Return elements in pairs: (1st, 2nd), (2nd, 3rd) ... (n - 1, last).
+  for i in 0 ..< s.len - 1:
+    yield(segment(s[i], s[i + 1]))
 
 proc overlaps*(a, b: Vec2): bool {.inline.} =
   ## Test overlap: point vs point. (Must be exactly equal.)
@@ -283,7 +289,7 @@ proc overlaps*(s: Segment, r: Rect): bool =
   if overlaps(s.at, r) or overlaps(s.to, r):
     return true
 
-  for side in r.segments:
+  for side in r.segmentsClosed:
     if s.overlaps(side):
       return true
 
@@ -318,8 +324,8 @@ proc overlaps*(poly: seq[Vec2], p: Vec2): bool =
 
   var collision = false
 
-  # Go through each of the vertices and the next vertex in the polygon.
-  for s in poly.segments:
+  # Go through each of the sides of the polygon.
+  for s in poly.segmentsClosed:
     let
       vc = s.at
       vn = s.to
@@ -337,8 +343,8 @@ proc overlaps*(p: Vec2, poly: seq[Vec2]): bool {.inline.} =
 proc overlaps*(poly: seq[Vec2], c: Circle): bool =
   ## Test overlap: polygon vs circle.
 
-  # Go through each of the vertices and the next vertex in the polygon.
-  for s in poly.segments:
+  # Go through each of the sides of the polygon.
+  for s in poly.segmentsClosed:
     # check for collision between the circle and
     # a line formed between the two vertices
     if overlaps(s, c):
@@ -353,7 +359,7 @@ proc overlaps*(c: Circle, poly: seq[Vec2]): bool {.inline.} =
 
 proc overlaps*(poly: seq[Vec2], r: Rect): bool =
   ## Test overlap: polygon vs rect.
-  for s in poly.segments:
+  for s in poly.segmentsClosed:
     if overlaps(s, r):
       return true
   # Test if the rectangle is inside the polygon.
@@ -365,7 +371,7 @@ proc overlaps*(r: Rect, poly: seq[Vec2]): bool {.inline.} =
 
 proc overlaps*(poly: seq[Vec2], s: Segment): bool =
   ## Test overlap: polygon vs segment.
-  for seg in poly.segments:
+  for seg in poly.segmentsClosed:
     if overlaps(seg, s):
       return true
   # Test if the rectangle is inside the polygon.
@@ -377,8 +383,8 @@ proc overlaps*(s: Segment, poly: seq[Vec2]): bool {.inline.} =
 
 proc overlaps*(a: seq[Vec2], b: seq[Vec2]): bool =
   ## Test overlap: polygon vs polygon.
-  for a in a.segments:
-    for b in b.segments:
+  for a in a.segmentsClosed:
+    for b in b.segmentsClosed:
       if overlaps(a, b):
         return true
   # Test if the a polygon is inside the b polygon.
@@ -424,7 +430,7 @@ proc overlaps*(l: Line, p: Vec2, fudge = 0.1): bool {.inline.} =
 
 proc overlaps*(r: Rect, l: Line): bool {.inline.} =
   ## Test overlap: rect vs line.
-  for s in r.segments:
+  for s in r.segmentsClosed:
     if overlaps(s, l):
       return true
 
@@ -434,7 +440,7 @@ proc overlaps*(l: Line, r: Rect): bool {.inline.} =
 
 proc overlaps*(p: seq[Vec2], l: Line): bool {.inline.} =
   ## Test overlap: rect vs line.
-  for s in p.segments:
+  for s in p.segmentsClosed:
     if overlaps(s, l):
       return true
 
@@ -490,3 +496,72 @@ proc intersects*(s: Segment, l: Line, at: var Vec2): bool {.inline.} =
 
 proc length*(s: Segment): float32 {.inline.} =
   (s.at - s.to).length
+
+proc makeHullPresorted(points: seq[Vec2]): seq[Vec2] =
+  ## Monotone chain.
+
+  # Deal with the upper half.
+  var upperHull: seq[Vec2]
+  for i in 0 ..< points.len:
+    let p = points[i]
+    while upperHull.len >= 2:
+      let q = upperHull[upperHull.len - 1]
+      let r = upperHull[upperHull.len - 2]
+      if (q.x - r.x) * (p.y - r.y) >= (q.y - r.y) * (p.x - r.x):
+        discard upperHull.pop()
+      else:
+        break
+    upperHull.add(p)
+  discard upperHull.pop()
+
+  # Deal with the lower half.
+  var lowerHull: seq[Vec2]
+  for i in countDown(points.len - 1, 0):
+    let p = points[i]
+    while lowerHull.len >= 2:
+      let q = lowerHull[lowerHull.len - 1]
+      let r = lowerHull[lowerHull.len - 2]
+      if (q.x - r.x) * (p.y - r.y) >= (q.y - r.y) * (p.x - r.x):
+        discard lowerHull.pop()
+      else:
+        break
+    lowerHull.add(p)
+  discard lowerHull.pop()
+
+  # See if lower or upper half needs merging.
+  if upperHull.len == 1 and
+    lowerHull.len == 1 and
+    upperHull[0].x == lowerHull[0].x and
+    upperHull[0].y == lowerHull[0].y:
+    return upperHull
+  else:
+    return upperHull & lowerHull
+
+proc convexCmp(a, b: Vec2): int =
+  ## Convex hull sorter.
+  if a.x < b.x:
+    return -1
+  elif a.x > b.x:
+    return +1
+  elif a.y < b.y:
+    return -1
+  elif a.y > b.y:
+    return +1
+  else:
+    return 0
+
+proc convexHull*(points: seq[Vec2]): seq[Vec2] =
+  ## Monotone chain, a.k.a. Andrew's algorithm— O(n log n)
+  ## Published in 1979 by A. M. Andrew.
+
+  if points.len <= 3: # It's just a Triangle.
+    return points
+
+  var sortedPoints = points
+  sortedPoints.sort(convexCmp)
+  makeHullPresorted(sortedPoints)
+
+proc convexHullNormal*(s: Segment): Vec2 =
+  ## Gets the normal of the segment returned from convexHull().
+  let t = (s.to - s.at).normalize()
+  -vec2(t.y, -t.x)
