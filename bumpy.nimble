@@ -1,4 +1,4 @@
-version     = "1.0.2"
+version     = "1.0.3"
 author      = "Andre von Houck"
 description = "2d collision library."
 license     = "MIT"
@@ -6,4 +6,4 @@ license     = "MIT"
 srcDir = "src"
 
 requires "nim >= 1.2.2"
-requires "vmath >= 0.4.0"
+requires "vmath >= 1.0.0"
