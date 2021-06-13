@@ -19,27 +19,33 @@ proc gen() =
 
   hull2 = genHull(7)
 
+proc drawHull(hull: seq[Vec2]) =
+  ctx.beginPath()
+  for i, v in hull:
+    if i == 0:
+      ctx.moveTo(v)
+    else:
+      ctx.lineTo(v)
+
+  # for v in hull:
+  #   ctx.lineTo(v)
+
+  ctx.closePath()
+  ctx.strokeStyle = "#3498db"
+  ctx.stroke()
+
 gen()
 start()
 
 while true:
   screen.fill(rgba(255, 255, 255, 255))
-
-  for s in hull1.segmentsClosed:
-    #let mid = (s.at + s.to)/2
-    screen.strokeSegment(s, parseHtmlColor("#3498db"))
-    #let normal = s.convexHullNormal
-    #screen.strokeSegment(segment(mid, mid + normal*20), rgba(255, 0, 0, 255))
+  hull1.drawHull()
 
   var hull2shifted = hull2
   for p in hull2shifted.mitems:
     p += getMousePos() - vec2(100, 100)
 
-  for s in hull2shifted.segmentsClosed:
-    #let mid = (s.at + s.to)/2
-    screen.strokeSegment(s, parseHtmlColor("#2ecc71"))
-    #let normal = s.convexHullNormal
-    #screen.strokeSegment(segment(mid, mid + normal*20), rgba(255, 0, 0, 255))
+  hull2shifted.drawHull()
 
   var
     numA = 0
@@ -52,38 +58,31 @@ while true:
     for b in hull2shifted.segmentsClosed:
       var at: Vec2
       if a.intersects(b, at):
-        screen.strokeCircle(at, 3, rgba(255, 0, 0, 255))
+        ctx.strokeStyle = rgba(255, 0, 0, 255)
+        ctx.strokeCircle(at, 3)
         let normalA = a.convexHullNormal
-        screen.strokeSegment(segment(at, at + normalA*40), rgba(255, 0, 0, 255))
-
+        ctx.strokeStyle = rgba(255, 0, 0, 255)
+        ctx.strokeSegment(segment(at, at + normalA*40))
 
         let normalB = b.convexHullNormal
-        screen.strokeSegment(segment(at, at + normalB*40), rgba(0, 255, 0, 255))
+        ctx.strokeStyle = rgba(0, 255, 0, 255)
+        ctx.strokeSegment(segment(at, at + normalB*40))
 
         avgA += at
         inc numA
         normA += normalA
         normB += normalB
 
-
-        #let normalAvg = (normalA + normalB) / 2
-        #screen.strokeSegment(segment(at, at + normalAvg*40), rgba(0, 0, 255, 255))
   avgA /= numA.float32
   normA /= numA.float32
   normB /= numA.float32
-  screen.strokeCircle(avgA, 5, rgba(255, 0, 0, 255))
-  screen.strokeSegment(segment(avgA, avgA + normA*80), rgba(255, 0, 0, 255))
-  screen.strokeSegment(segment(avgA, avgA + normB*80), rgba(0, 255, 0, 255))
+  ctx.strokeStyle = rgba(255, 0, 0, 255)
+  ctx.strokeCircle(avgA, 5)
+  ctx.strokeStyle = rgba(255, 0, 0, 255)
+  ctx.strokeSegment(segment(avgA, avgA + normA*80))
+  ctx.strokeStyle = rgba(0, 255, 0, 255)
+  ctx.strokeSegment(segment(avgA, avgA + normB*80))
 
-
-
-  # for a in hull1.segmentsClosed:
-  #   for b in hull2shifted:
-  #     let normalA = a.convexHullNormal
-  #     let s1 = segment(b, b + normalA * 100)
-  #     var at: Vec2
-  #     if a.intersects(s1, at):
-  #       screen.strokeCircle(at, 3, rgba(255, 0, 0, 255))
 
   if isKeyDown(KEY_SPACE):
     gen()
