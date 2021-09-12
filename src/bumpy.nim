@@ -1,4 +1,4 @@
-import strformat, vmath, algorithm
+import vmath, algorithm
 
 type
   Circle* = object
@@ -69,7 +69,7 @@ proc `+`*(a, b: Rect): Rect =
   result.h = a.h
 
 proc `$`*(a: Rect): string =
-  &"({a.x}, {a.y}: {a.w} x {a.h})"
+  "(" & $a.x & ", " & $a.y & ": " & $a.w & " x " & $a.h & ")"
 
 proc `or`*(a, b: Rect): Rect =
   ## Union of two rectangles.
