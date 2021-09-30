@@ -1,8 +1,12 @@
 # Bumpy - 2d collision library for nim.
 
+`nimble install bumpy`
+
 ![Github Actions](https://github.com/treeform/bumpy/workflows/Github%20Actions/badge.svg)
 
-`nimble install bumpy`
+[API reference](https://nimdocs.com/treeform/bumpy)
+
+## About
 
 Based on the book http://www.jeffreythompson.org/collision-detection/table_of_contents.php
 
