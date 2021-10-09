@@ -1,4 +1,4 @@
-import bumpy, pixie/demo, vmath, chroma
+import bumpy, common, pixie/demo, vmath, chroma
 
 # The lines always overlap unless you get them to be perfectly parallel.
 
@@ -11,12 +11,13 @@ a.a.y = 100
 
 b.a.x = 0
 b.a.y = 400
-b.b.x = screen.width.float32
 b.b.y = 600
 
 start()
 
 while true:
+  b.b.x = screen.width.float32
+
   screen.fill(rgba(255, 255, 255, 255))
 
   if getMousePos().x > 300:

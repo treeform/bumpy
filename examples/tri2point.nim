@@ -14,7 +14,7 @@ while true:
   screen.fill(rgba(255, 255, 255, 255))
 
   point = getMousePos()
-  screen.fillCircle(point, 10, parseHtmlColor("#2ecc71"))
+  screen.fillCircle(circle(point, 10), parseHtmlColor("#2ecc71"))
 
   var color =
     if overlaps(tri, point):

@@ -1,4 +1,4 @@
-import bumpy, pixie/demo, vmath, chroma, random, common
+import bumpy, pixie/demo, vmath, chroma, random
 
 var
   hull1: seq[Vec2]
@@ -59,7 +59,7 @@ while true:
       var at: Vec2
       if a.intersects(b, at):
         ctx.strokeStyle = rgba(255, 0, 0, 255)
-        ctx.strokeCircle(at, 3)
+        ctx.strokeCircle(circle(at, 3))
         let normalA = a.convexHullNormal
         ctx.strokeStyle = rgba(255, 0, 0, 255)
         ctx.strokeSegment(segment(at, at + normalA*40))
@@ -77,7 +77,7 @@ while true:
   normA /= numA.float32
   normB /= numA.float32
   ctx.strokeStyle = rgba(255, 0, 0, 255)
-  ctx.strokeCircle(avgA, 5)
+  ctx.strokeCircle(circle(avgA, 5))
   ctx.strokeStyle = rgba(255, 0, 0, 255)
   ctx.strokeSegment(segment(avgA, avgA + normA*80))
   ctx.strokeStyle = rgba(0, 255, 0, 255)
