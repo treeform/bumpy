@@ -1,4 +1,4 @@
-import bumpy, pixie/demo, vmath, chroma
+import bumpy, common, pixie/demo, vmath, chroma
 
 var
   a: Circle
@@ -14,12 +14,12 @@ while true:
   screen.fill(rgba(255, 255, 255, 255))
 
   a.pos = getMousePos()
-  screen.fillCircle(a.pos, a.radius, parseHtmlColor("#2ecc71"))
+  screen.fillCircle(a, parseHtmlColor("#2ecc71"))
 
   var color =
     if overlaps(a, b): parseHtmlColor("#e74c3c")
     else: parseHtmlColor("#3498db")
   color.a = 0.75
-  screen.fillCircle(b.pos, b.radius, color)
+  screen.fillCircle(b, color)
 
   tick()

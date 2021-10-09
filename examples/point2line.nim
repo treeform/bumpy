@@ -1,4 +1,4 @@
-import bumpy, pixie/demo, vmath, chroma
+import bumpy, common, pixie/demo, vmath, chroma
 
 # The lines always overlap unless you get them to be perfectly parallel.
 
@@ -17,7 +17,7 @@ while true:
   screen.fill(rgba(255, 255, 255, 255))
 
   p = getMousePos()
-  screen.strokeCircle(p, 10, parseHtmlColor("#2ecc71"))
+  screen.strokeCircle(circle(p, 10), parseHtmlColor("#2ecc71"))
 
   let color =
     if overlaps(l, p, fudge = 1.5):

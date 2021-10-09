@@ -31,7 +31,7 @@ while true:
       inc i
 
   for p in points:
-    screen.strokeCircle(p, 5, parseHtmlColor("#2ecc71"))
+    screen.strokeCircle(circle(p, 5), parseHtmlColor("#2ecc71"))
 
   if isKeyDown(KEY_SPACE):
     gen()
@@ -42,7 +42,7 @@ while true:
         if p.dist(getMousePos()) < 6:
           dragging = i
     if dragging != -1:
-      screen.fillCircle(points[dragging], 7, parseHtmlColor("#2ecc71"))
+      screen.fillCircle(circle(points[dragging], 7), parseHtmlColor("#2ecc71"))
       points[dragging] = getMousePos()
       hull = convexHull(points)
   else:
