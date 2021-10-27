@@ -1,4 +1,4 @@
-import bumpy, pixie/demo, vmath, chroma, random
+import bumpy, chroma, pixie/demo, random, vmath
 
 var
   hull1: seq[Vec2]
@@ -82,7 +82,6 @@ while true:
   ctx.strokeSegment(segment(avgA, avgA + normA*80))
   ctx.strokeStyle = rgba(0, 255, 0, 255)
   ctx.strokeSegment(segment(avgA, avgA + normB*80))
-
 
   if isKeyDown(KEY_SPACE):
     gen()

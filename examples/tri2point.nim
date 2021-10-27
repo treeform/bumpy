@@ -1,4 +1,4 @@
-import bumpy, pixie/demo, vmath, chroma, common
+import bumpy, chroma, common, pixie/demo, vmath
 
 var
   tri: seq[Vec2]

@@ -1,4 +1,4 @@
-import bumpy, common, pixie/demo, vmath, chroma, common
+import bumpy, chroma, common, pixie/demo, vmath
 
 # The lines always overlap unless you get them to be perfectly parallel.
 
