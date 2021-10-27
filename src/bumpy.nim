@@ -1,4 +1,4 @@
-import vmath, algorithm
+import algorithm, vmath
 
 type
   Circle* = object

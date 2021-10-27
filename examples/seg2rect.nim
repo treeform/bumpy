@@ -1,4 +1,5 @@
-import bumpy, pixie/demo, vmath, chroma
+import bumpy, chroma, pixie/demo, vmath
+
 var
   s: Segment
   r: Rect

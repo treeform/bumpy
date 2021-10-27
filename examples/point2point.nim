@@ -1,4 +1,4 @@
-import bumpy, common, pixie/demo, vmath, chroma
+import bumpy, chroma, common, pixie/demo, vmath
 
 var a, b: Vec2
 b.x = 300

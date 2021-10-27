@@ -1,4 +1,4 @@
-import bumpy, pixie/demo, vmath, chroma, random, common
+import bumpy, chroma, common, pixie/demo, random, vmath
 
 var
   points: seq[Vec2]

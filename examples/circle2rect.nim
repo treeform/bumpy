@@ -1,4 +1,4 @@
-import bumpy, common, pixie/demo, vmath, chroma
+import bumpy, chroma, common, pixie/demo, vmath
 
 var
   a: Circle
