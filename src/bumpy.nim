@@ -309,15 +309,9 @@ proc overlapsTri*(tri: seq[Vec2], p: Vec2): bool =
   # get the area of 3 triangles made between the point
   # and the corners of the triangle
   let
-    area1 = abs(
-      (tri[0].x - p.x) * (tri[1].y - p.y) - (tri[1].x - p.x) * (tri[0].y - p.y)
-    )
-    area2 = abs(
-      (tri[1].x - p.x) * (tri[2].y - p.y) - (tri[2].x - p.x) * (tri[1].y - p.y)
-    )
-    area3 = abs(
-      (tri[2].x - p.x) * (tri[0].y - p.y) - (tri[0].x - p.x) * (tri[2].y - p.y)
-    )
+    area1 = abs((tri[0].x - p.x) * (tri[1].y - p.y) - (tri[1].x - p.x) * (tri[0].y - p.y))
+    area2 = abs((tri[1].x - p.x) * (tri[2].y - p.y) - (tri[2].x - p.x) * (tri[1].y - p.y))
+    area3 = abs((tri[2].x - p.x) * (tri[0].y - p.y) - (tri[0].x - p.x) * (tri[2].y - p.y))
 
   # If the sum of the three areas equals the original,
   # we're inside the triangle!
