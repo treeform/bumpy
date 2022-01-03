@@ -1,6 +1,4 @@
-import bumpy, chroma, common, pixie/demo, vmath
-
-# The lines always overlap unless you get them to be perfectly parallel.
+import bumpy, common, pixie/demo
 
 var
   l: Line
@@ -16,7 +14,7 @@ start()
 while true:
   screen.fill(rgba(255, 255, 255, 255))
 
-  p = getMousePos()
+  p = window.mousePos.vec2
   screen.strokeCircle(circle(p, 10), parseHtmlColor("#2ecc71"))
 
   let color =

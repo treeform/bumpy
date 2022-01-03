@@ -1,4 +1,4 @@
-import bumpy, chroma, common, pixie, pixie/demo, vmath
+import bumpy, common, pixie, pixie/demo
 
 var
   poly: seq[Vec2]
@@ -17,7 +17,7 @@ start()
 while true:
   screen.fill(rgba(255, 255, 255, 255))
 
-  rect.xy = getMousePos()
+  rect.xy = window.mousePos.vec2
   screen.fillRect(rect, parseHtmlColor("#2ecc71"))
 
   var color =

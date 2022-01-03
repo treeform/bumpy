@@ -1,4 +1,4 @@
-import bumpy, chroma, common, pixie/demo, random, vmath
+import bumpy, common, pixie/demo, random
 
 var
   points: seq[Vec2]
@@ -33,17 +33,17 @@ while true:
   for p in points:
     screen.strokeCircle(circle(p, 5), parseHtmlColor("#2ecc71"))
 
-  if isKeyDown(KEY_SPACE):
+  if window.buttonDown[KeySpace]:
     gen()
 
-  if isMouseDown():
+  if window.buttonDown[MouseLeft]:
     if dragging == -1:
       for i, p in points:
-        if p.dist(getMousePos()) < 6:
+        if p.dist(window.mousePos.vec2) < 6:
           dragging = i
     if dragging != -1:
       screen.fillCircle(circle(points[dragging], 7), parseHtmlColor("#2ecc71"))
-      points[dragging] = getMousePos()
+      points[dragging] = window.mousePos.vec2
       hull = convexHull(points)
   else:
     dragging = -1

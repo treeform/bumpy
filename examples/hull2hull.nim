@@ -1,4 +1,4 @@
-import bumpy, chroma, pixie/demo, random, vmath
+import bumpy, pixie/demo, random
 
 var
   hull1: seq[Vec2]
@@ -43,7 +43,7 @@ while true:
 
   var hull2shifted = hull2
   for p in hull2shifted.mitems:
-    p += getMousePos() - vec2(100, 100)
+    p += window.mousePos.vec2 - vec2(100, 100)
 
   hull2shifted.drawHull()
 
@@ -83,7 +83,7 @@ while true:
   ctx.strokeStyle = rgba(0, 255, 0, 255)
   ctx.strokeSegment(segment(avgA, avgA + normB*80))
 
-  if isKeyDown(KEY_SPACE):
+  if window.buttonDown[KeySpace]:
     gen()
 
   tick()

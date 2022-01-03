@@ -1,4 +1,4 @@
-import bumpy, chroma, pixie/demo, vmath
+import bumpy, common, pixie/demo
 
 var
   d: Segment
@@ -17,7 +17,7 @@ start()
 while true:
   screen.fill(rgba(255, 255, 255, 255))
 
-  d.to = getMousePos()
+  d.to = window.mousePos.vec2
   screen.strokeSegment(d, parseHtmlColor("#2ecc71"))
 
   var color =
