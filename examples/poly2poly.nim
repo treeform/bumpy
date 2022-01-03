@@ -1,4 +1,4 @@
-import bumpy, chroma, common, pixie/demo, vmath
+import bumpy, common, pixie/demo
 
 var
   a: seq[Vec2]
@@ -14,7 +14,7 @@ start()
 while true:
   screen.fill(rgba(255, 255, 255, 255))
 
-  let mousePos = getMousePos()
+  let mousePos = window.mousePos.vec2
   a.setLen(0)
   a.add(vec2(-20, -10) + mousePos)
   a.add(vec2(-30, -49) + mousePos)

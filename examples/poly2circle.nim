@@ -1,4 +1,4 @@
-import bumpy, chroma, common, pixie/demo, vmath
+import bumpy, common, pixie/demo
 
 var
   poly: seq[Vec2]
@@ -15,7 +15,7 @@ start()
 while true:
   screen.fill(rgba(255, 255, 255, 255))
 
-  circle.pos = getMousePos()
+  circle.pos = window.mousePos.vec2
   screen.fillCircle(circle, parseHtmlColor("#2ecc71"))
 
   var color =

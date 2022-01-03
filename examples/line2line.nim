@@ -1,4 +1,4 @@
-import bumpy, chroma, common, pixie/demo, vmath
+import bumpy, common, pixie/demo
 
 # The lines always overlap unless you get them to be perfectly parallel.
 
@@ -20,8 +20,8 @@ while true:
 
   screen.fill(rgba(255, 255, 255, 255))
 
-  if getMousePos().x > 300:
-    a.b = getMousePos()
+  if window.mousePos.x > 300:
+    a.b = window.mousePos.vec2
   else:
     a.b = vec2(screen.width.float32, 300)
   let windowEdge = Line(

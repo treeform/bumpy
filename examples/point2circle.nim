@@ -1,4 +1,4 @@
-import bumpy, chroma, common, pixie/demo, vmath
+import bumpy, common, pixie/demo
 
 var
   a: Vec2
@@ -12,7 +12,7 @@ start()
 while true:
   screen.fill(rgba(255, 255, 255, 255))
 
-  a = getMousePos()
+  a = window.mousePos.vec2
   screen.strokeCircle(circle(a, 10), parseHtmlColor("#2ecc71"))
 
   var color =
