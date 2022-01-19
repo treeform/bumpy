@@ -1,4 +1,4 @@
-import bumpy, common, pixie/demo
+import bumpy, common
 
 # The lines always overlap unless you get them to be perfectly parallel.
 

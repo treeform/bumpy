@@ -1,4 +1,4 @@
-import bumpy, common, pixie, pixie/demo
+import bumpy, common
 
 var
   poly: seq[Vec2]
