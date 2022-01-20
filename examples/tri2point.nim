@@ -1,4 +1,4 @@
-import bumpy, common, pixie/demo
+import bumpy, common
 
 var
   tri: seq[Vec2]

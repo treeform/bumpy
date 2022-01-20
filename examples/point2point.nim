@@ -1,4 +1,4 @@
-import bumpy, common, pixie/demo
+import bumpy, common
 
 var a, b: Vec2
 b.x = 300

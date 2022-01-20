@@ -1,4 +1,4 @@
-import bumpy, pixie/demo, random
+import bumpy, common, random
 
 var
   hull1: seq[Vec2]
