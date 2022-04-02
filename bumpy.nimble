@@ -1,4 +1,4 @@
-version     = "1.0.3"
+version     = "1.1.0"
 author      = "Andre von Houck"
 description = "2d collision library."
 license     = "MIT"
