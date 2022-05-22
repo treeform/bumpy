@@ -100,23 +100,19 @@ proc circle*(pos: Vec2, radius: float32): Circle {.inline.} =
 proc segment*(at, to: Vec2): Segment {.inline.} =
   Segment(at: at, to: to)
 
-iterator segmentsClosed(r: Rect): Segment =
+iterator segments(r: Rect): Segment =
   ## Returns all sides of the rect as segments.
   yield segment(vec2(r.x, r.y), vec2(r.x, r.y + r.h))
   yield segment(vec2(r.x + r.w, r.y), vec2(r.x + r.w, r.y + r.h))
   yield segment(vec2(r.x, r.y), vec2(r.x + r.w, r.y))
   yield segment(vec2(r.x, r.y + r.h), vec2(r.x + r.w, r.y + r.h))
 
-iterator segmentsClosed*(poly: Polygon): Segment =
+iterator segments*(poly: Polygon): Segment =
   ## Return elements in pairs: (1st, 2nd), (2nd, 3rd) ... (last, 1st).
   for i in 0 ..< poly.len - 1:
     yield segment(poly[i], poly[i+1])
-  yield segment(poly[^1], poly[0])
-
-iterator segments*(s: Polygon): Segment =
-  ## Return elements in pairs: (1st, 2nd), (2nd, 3rd) ... (n - 1, last).
-  for i in 0 ..< s.len - 1:
-    yield(segment(s[i], s[i + 1]))
+  if poly[^1] != poly[0]:
+    yield segment(poly[^1], poly[0])
 
 proc overlaps*(a, b: Vec2): bool {.inline.} =
   ## Test overlap: point vs point. (Must be exactly equal.)
@@ -291,7 +287,7 @@ proc overlaps*(s: Segment, r: Rect): bool =
   if overlaps(s.at, r) or overlaps(s.to, r):
     return true
 
-  for side in r.segmentsClosed:
+  for side in r.segments:
     if s.overlaps(side):
       return true
 
@@ -327,7 +323,7 @@ proc overlaps*(poly: Polygon, p: Vec2): bool =
   var collision = false
 
   # Go through each of the sides of the polygon.
-  for s in poly.segmentsClosed:
+  for s in poly.segments:
     let
       vc = s.at
       vn = s.to
@@ -346,7 +342,7 @@ proc overlaps*(poly: Polygon, c: Circle): bool =
   ## Test overlap: polygon vs circle.
 
   # Go through each of the sides of the polygon.
-  for s in poly.segmentsClosed:
+  for s in poly.segments:
     # check for collision between the circle and
     # a line formed between the two vertices
     if overlaps(s, c):
@@ -361,7 +357,7 @@ proc overlaps*(c: Circle, poly: Polygon): bool {.inline.} =
 
 proc overlaps*(poly: Polygon, r: Rect): bool =
   ## Test overlap: polygon vs rect.
-  for s in poly.segmentsClosed:
+  for s in poly.segments:
     if overlaps(s, r):
       return true
   # Test if the rectangle is inside the polygon.
@@ -373,7 +369,7 @@ proc overlaps*(r: Rect, poly: Polygon): bool {.inline.} =
 
 proc overlaps*(poly: Polygon, s: Segment): bool =
   ## Test overlap: polygon vs segment.
-  for seg in poly.segmentsClosed:
+  for seg in poly.segments:
     if overlaps(seg, s):
       return true
   # Test if the rectangle is inside the polygon.
@@ -385,8 +381,8 @@ proc overlaps*(s: Segment, poly: Polygon): bool {.inline.} =
 
 proc overlaps*(a: Polygon, b: Polygon): bool =
   ## Test overlap: polygon vs polygon.
-  for a in a.segmentsClosed:
-    for b in b.segmentsClosed:
+  for a in a.segments:
+    for b in b.segments:
       if overlaps(a, b):
         return true
   # Test if the a polygon is inside the b polygon.
@@ -432,7 +428,7 @@ proc overlaps*(l: Line, p: Vec2, fudge = 0.1): bool {.inline.} =
 
 proc overlaps*(r: Rect, l: Line): bool {.inline.} =
   ## Test overlap: rect vs line.
-  for s in r.segmentsClosed:
+  for s in r.segments:
     if overlaps(s, l):
       return true
 
@@ -442,7 +438,7 @@ proc overlaps*(l: Line, r: Rect): bool {.inline.} =
 
 proc overlaps*(p: Polygon, l: Line): bool {.inline.} =
   ## Test overlap: rect vs line.
-  for s in p.segmentsClosed:
+  for s in p.segments:
     if overlaps(s, l):
       return true
 
