@@ -54,8 +54,8 @@ while true:
     numB = 0
     avgB: Vec2
     normB: Vec2
-  for a in hull1.segmentsClosed:
-    for b in hull2shifted.segmentsClosed:
+  for a in hull1.segments:
+    for b in hull2shifted.segments:
       var at: Vec2
       if a.intersects(b, at):
         ctx.strokeStyle = rgba(255, 0, 0, 255)

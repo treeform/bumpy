@@ -23,7 +23,7 @@ while true:
     #screen.strokePoly(hull, parseHtmlColor("#3498db"))
 
     var i = 0
-    for s in hull.segmentsClosed:
+    for s in hull.segments:
       let mid = (s.at + s.to)/2
       screen.strokeSegment(s, parseHtmlColor("#3498db"))
       let normal = s.convexHullNormal
