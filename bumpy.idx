@@ -1,0 +1,67 @@
+Circle	bumpy.html#Circle	bumpy: Circle	
+Segment	bumpy.html#Segment	bumpy: Segment	
+Rect	bumpy.html#Rect	bumpy: Rect	
+Line	bumpy.html#Line	bumpy: Line	
+Polygon	bumpy.html#Polygon	bumpy: Polygon	
+rect	bumpy.html#rect,float32,float32,float32,float32	bumpy: rect(x, y, w, h: float32): Rect	
+rect	bumpy.html#rect,Vec2,Vec2	bumpy: rect(pos, size: Vec2): Rect	
+line	bumpy.html#line,Vec2,Vec2	bumpy: line(a, b: Vec2): Line	
+xy	bumpy.html#xy,Rect	bumpy: xy(rect: Rect): Vec2	
+xy=	bumpy.html#xy=,Rect,Vec2	bumpy: xy=(rect: var Rect; v: Vec2)	
+wh	bumpy.html#wh,Rect	bumpy: wh(rect: Rect): Vec2	
+wh=	bumpy.html#wh=,Rect,Vec2	bumpy: wh=(rect: var Rect; v: Vec2)	
+`*`	bumpy.html#*,Rect,float	bumpy: `*`(r: Rect; v: float): Rect	
+`/`	bumpy.html#/,Rect,float	bumpy: `/`(r: Rect; v: float): Rect	
+`+`	bumpy.html#+,Rect,Rect	bumpy: `+`(a, b: Rect): Rect	
+`$`	bumpy.html#$,Rect	bumpy: `$`(a: Rect): string	
+`or`	bumpy.html#or,Rect,Rect	bumpy: `or`(a, b: Rect): Rect	
+`and`	bumpy.html#and,Rect,Rect	bumpy: `and`(a, b: Rect): Rect	
+`+=`	bumpy.html#+=,Segment,Vec2	bumpy: `+=`(s: var Segment; v: Vec2)	
+`*`	bumpy.html#*,Mat3,Segment	bumpy: `*`(m: Mat3; s: Segment): Segment	
+circle	bumpy.html#circle,Vec2,float32	bumpy: circle(pos: Vec2; radius: float32): Circle	
+segment	bumpy.html#segment,Vec2,Vec2	bumpy: segment(at, to: Vec2): Segment	
+segments	bumpy.html#segments.i,Polygon	bumpy: segments(poly: Polygon): Segment	
+overlaps	bumpy.html#overlaps,Vec2,Vec2	bumpy: overlaps(a, b: Vec2): bool	
+overlaps	bumpy.html#overlaps,Vec2,Circle	bumpy: overlaps(a: Vec2; b: Circle): bool	
+overlaps	bumpy.html#overlaps,Circle,Vec2	bumpy: overlaps(a: Circle; b: Vec2): bool	
+overlaps	bumpy.html#overlaps,Circle,Circle	bumpy: overlaps(a, b: Circle): bool	
+overlaps	bumpy.html#overlaps,Vec2,Rect	bumpy: overlaps(a: Vec2; b: Rect): bool	
+overlaps	bumpy.html#overlaps,Rect,Vec2	bumpy: overlaps(a: Rect; b: Vec2): bool	
+overlaps	bumpy.html#overlaps,Rect,Rect	bumpy: overlaps(a, b: Rect): bool	
+overlaps	bumpy.html#overlaps,Circle,Rect	bumpy: overlaps(a: Circle; b: Rect): bool	
+overlaps	bumpy.html#overlaps,Rect,Circle	bumpy: overlaps(a: Rect; b: Circle): bool	
+overlaps	bumpy.html#overlaps,Vec2,Segment,float	bumpy: overlaps(a: Vec2; s: Segment; fudge = 0.1): bool	
+overlaps	bumpy.html#overlaps,Segment,Vec2,float	bumpy: overlaps(a: Segment; b: Vec2; fudge = 0.1): bool	
+overlaps	bumpy.html#overlaps,Circle,Segment	bumpy: overlaps(c: Circle; s: Segment): bool	
+overlaps	bumpy.html#overlaps,Segment,Circle	bumpy: overlaps(s: Segment; c: Circle): bool	
+overlaps	bumpy.html#overlaps,Circle,Line	bumpy: overlaps(c: Circle; l: Line): bool	
+overlaps	bumpy.html#overlaps,Line,Circle	bumpy: overlaps(l: Line; c: Circle): bool	
+overlaps	bumpy.html#overlaps,Segment,Segment	bumpy: overlaps(d, s: Segment): bool	
+overlaps	bumpy.html#overlaps,Segment,Rect	bumpy: overlaps(s: Segment; r: Rect): bool	
+overlaps	bumpy.html#overlaps,Rect,Segment	bumpy: overlaps(r: Rect; s: Segment): bool	
+overlapsTri	bumpy.html#overlapsTri,Polygon,Vec2	bumpy: overlapsTri(tri: Polygon; p: Vec2): bool	
+overlaps	bumpy.html#overlaps,Polygon,Vec2	bumpy: overlaps(poly: Polygon; p: Vec2): bool	
+overlaps	bumpy.html#overlaps,Vec2,Polygon	bumpy: overlaps(p: Vec2; poly: Polygon): bool	
+overlaps	bumpy.html#overlaps,Polygon,Circle	bumpy: overlaps(poly: Polygon; c: Circle): bool	
+overlaps	bumpy.html#overlaps,Circle,Polygon	bumpy: overlaps(c: Circle; poly: Polygon): bool	
+overlaps	bumpy.html#overlaps,Polygon,Rect	bumpy: overlaps(poly: Polygon; r: Rect): bool	
+overlaps	bumpy.html#overlaps,Rect,Polygon	bumpy: overlaps(r: Rect; poly: Polygon): bool	
+overlaps	bumpy.html#overlaps,Polygon,Segment	bumpy: overlaps(poly: Polygon; s: Segment): bool	
+overlaps	bumpy.html#overlaps,Segment,Polygon	bumpy: overlaps(s: Segment; poly: Polygon): bool	
+overlaps	bumpy.html#overlaps,Polygon,Polygon	bumpy: overlaps(a: Polygon; b: Polygon): bool	
+overlaps	bumpy.html#overlaps,Line,Line	bumpy: overlaps(a, b: Line): bool	
+overlaps	bumpy.html#overlaps,Line,Segment	bumpy: overlaps(l: Line; s: Segment): bool	
+overlaps	bumpy.html#overlaps,Segment,Line	bumpy: overlaps(s: Segment; l: Line): bool	
+overlaps	bumpy.html#overlaps,Vec2,Line,float	bumpy: overlaps(p: Vec2; l: Line; fudge = 0.1): bool	
+overlaps	bumpy.html#overlaps,Line,Vec2,float	bumpy: overlaps(l: Line; p: Vec2; fudge = 0.1): bool	
+overlaps	bumpy.html#overlaps,Rect,Line	bumpy: overlaps(r: Rect; l: Line): bool	
+overlaps	bumpy.html#overlaps,Line,Rect	bumpy: overlaps(l: Line; r: Rect): bool	
+overlaps	bumpy.html#overlaps,Polygon,Line	bumpy: overlaps(p: Polygon; l: Line): bool	
+overlaps	bumpy.html#overlaps,Line,Polygon	bumpy: overlaps(l: Line; p: Polygon): bool	
+intersects	bumpy.html#intersects,Segment,Segment,Vec2	bumpy: intersects(a, b: Segment; at: var Vec2): bool	
+intersects	bumpy.html#intersects,Line,Line,Vec2	bumpy: intersects(a, b: Line; at: var Vec2): bool	
+intersects	bumpy.html#intersects,Line,Segment,Vec2	bumpy: intersects(l: Line; s: Segment; at: var Vec2): bool	
+intersects	bumpy.html#intersects,Segment,Line,Vec2	bumpy: intersects(s: Segment; l: Line; at: var Vec2): bool	
+length	bumpy.html#length,Segment	bumpy: length(s: Segment): float32	
+convexHull	bumpy.html#convexHull,Polygon	bumpy: convexHull(points: Polygon): Polygon	
+convexHullNormal	bumpy.html#convexHullNormal,Segment	bumpy: convexHullNormal(s: Segment): Vec2	
