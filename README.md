@@ -4,7 +4,7 @@
 
 ![Github Actions](https://github.com/treeform/bumpy/workflows/Github%20Actions/badge.svg)
 
-[API reference](https://nimdocs.com/treeform/bumpy)
+[API reference](https://treeform.github.io/bumpy)
 
 ## About
 
@@ -22,5 +22,3 @@ Rectangle     | ✅           | ✅            | ✅           | ✅            
 Segment       | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            |
 Polygon       | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            |
 Line          | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            |
-
-See API Reference: https://nimdocs.com/treeform/bumpy/bumpy.html
