@@ -1,4 +1,4 @@
-# Bumpy - 2d collision library for Nim.
+# Bumpy - 2d geometry intersections library for Nim.
 
 `nimble install bumpy`
 
