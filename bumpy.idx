@@ -3,6 +3,7 @@ Segment	bumpy.html#Segment	bumpy: Segment
 Rect	bumpy.html#Rect	bumpy: Rect	
 Line	bumpy.html#Line	bumpy: Line	
 Polygon	bumpy.html#Polygon	bumpy: Polygon	
+Wedge	bumpy.html#Wedge	bumpy: Wedge	
 rect	bumpy.html#rect,float32,float32,float32,float32	bumpy: rect(x, y, w, h: float32): Rect	
 rect	bumpy.html#rect,Vec2,Vec2	bumpy: rect(pos, size: Vec2): Rect	
 line	bumpy.html#line,Vec2,Vec2	bumpy: line(a, b: Vec2): Line	
@@ -65,3 +66,17 @@ intersects	bumpy.html#intersects,Segment,Line,Vec2	bumpy: intersects(s: Segment;
 length	bumpy.html#length,Segment	bumpy: length(s: Segment): float32	
 convexHull	bumpy.html#convexHull,Polygon	bumpy: convexHull(points: Polygon): Polygon	
 convexHullNormal	bumpy.html#convexHullNormal,Segment	bumpy: convexHullNormal(s: Segment): Vec2	
+polygon	bumpy.html#polygon,Wedge,float32	bumpy: polygon(wedge: Wedge; error: float32 = 1.0): Polygon	
+overlaps	bumpy.html#overlaps,Wedge,Vec2	bumpy: overlaps(w: Wedge; p: Vec2): bool	
+overlaps	bumpy.html#overlaps,Vec2,Wedge	bumpy: overlaps(p: Vec2; w: Wedge): bool	
+overlaps	bumpy.html#overlaps,Wedge,Line,float	bumpy: overlaps(w: Wedge; l: Line; error = 0.5): bool	
+overlaps	bumpy.html#overlaps,Line,Wedge,float	bumpy: overlaps(l: Line; w: Wedge; error = 0.5): bool	
+overlaps	bumpy.html#overlaps,Wedge,Segment,float	bumpy: overlaps(w: Wedge; s: Segment; error = 0.5): bool	
+overlaps	bumpy.html#overlaps,Segment,Wedge,float	bumpy: overlaps(s: Segment; w: Wedge; error = 0.5): bool	
+overlaps	bumpy.html#overlaps,Wedge,Circle,float	bumpy: overlaps(w: Wedge; c: Circle; error = 0.5): bool	
+overlaps	bumpy.html#overlaps,Circle,Wedge,float	bumpy: overlaps(c: Circle; w: Wedge; error = 0.5): bool	
+overlaps	bumpy.html#overlaps,Wedge,Rect,float	bumpy: overlaps(w: Wedge; r: Rect; error = 0.5): bool	
+overlaps	bumpy.html#overlaps,Rect,Wedge,float	bumpy: overlaps(r: Rect; w: Wedge; error = 0.5): bool	
+overlaps	bumpy.html#overlaps,Wedge,Polygon,float	bumpy: overlaps(w: Wedge; p: Polygon; error = 0.5): bool	
+overlaps	bumpy.html#overlaps,Polygon,Wedge,float	bumpy: overlaps(p: Polygon; w: Wedge; error = 0.5): bool	
+overlaps	bumpy.html#overlaps,Wedge,Wedge,float	bumpy: overlaps(a: Wedge; b: Wedge; error = 0.5): bool	
