@@ -14,11 +14,12 @@ Mostly used for vector 2d intersections checking for Pixie: https://github.com/t
 
 Supported intersections:
 
-Shape         | Point         | Circle        | Rectangle     | Segment       | Polygon       | Line          |
-------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-Point         | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            |
-Circle        | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            |
-Rectangle     | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            |
-Segment       | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            |
-Polygon       | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            |
-Line          | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            |
+Shape         | Point         | Circle        | Rectangle     | Segment       | Polygon       | Line          | Wedge          |
+------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+Point         | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            | ✅            |
+Circle        | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            | ✅            |
+Rectangle     | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            | ✅            |
+Segment       | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            | ✅            |
+Polygon       | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            | ✅            |
+Line          | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            | ✅            |
+Wedge         | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            | ✅            |

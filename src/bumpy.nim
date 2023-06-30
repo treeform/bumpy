@@ -21,6 +21,15 @@ type
 
   Polygon* = seq[Vec2]
 
+  Wedge* = object
+    ## Used in Field of View, Area of Effect, Sector Targeting and
+    ## Lighting/Shadows calculations.
+    pos*: Vec2              ## Position
+    rot*: float32           ## Rotation
+    minRadius*: float32     ## min radius, can't fire really close
+    maxRadius*: float32     ## far radius, max range
+    arc*: float32           ## Radians, -arc/2 is left and +arc/2 is right.
+
 proc rect*(x, y, w, h: float32): Rect {.inline.} =
   result.x = x
   result.y = y
@@ -563,3 +572,116 @@ proc convexHullNormal*(s: Segment): Vec2 =
   ## Gets the normal of the segment returned from convexHull().
   let t = (s.to - s.at).normalize()
   -vec2(t.y, -t.x)
+
+proc arcTolerance(radius: float32, arc: float32, error: float32): int =
+  ## Calculates the number of points needed to represent an arc within a given
+  ## error tolerance.
+  if radius == 0.0:
+    return 1
+  else:
+    let
+      # The formula for the number of points is derived from the error formula
+      # for approximating a circle with a regular polygon:
+      # error = radius - sqrt(radius^2 - (radius * cos(pi / n))^2)
+      n = ceil(Pi / arccos(1 - error / radius))
+      # We adjust n for our arc length.
+      numPoints = ceil(n * arc / (2 * Pi)).int
+    return max(3, numPoints)
+
+proc polygon*(wedge: Wedge, error: float32 = 1.0): Polygon =
+  ## Approximates a wedge shape with a Polygon
+
+  let halfArc = wedge.arc / 2
+
+  # Generate min arc if minRadius is not zero.
+  if wedge.minRadius > 0:
+    let numPointsMin = arcTolerance(wedge.minRadius, wedge.arc, error)
+    for i in 0 ..< numPointsMin:
+      let
+        a = float32(i) / float32(numPointsMin - 1)
+        angle = wedge.rot - halfArc + wedge.arc * a
+        point = wedge.pos + vec2(cos(angle), sin(angle)) * wedge.minRadius
+      result.add point
+  else:
+    result.add wedge.pos
+
+  # Generate max arc.
+  let numPointsMax = arcTolerance(wedge.maxRadius, wedge.arc, error)
+  for i in countdown(numPointsMax - 1, 0):
+    let
+      a = float32(i) / float32(numPointsMax - 1)
+      angle = wedge.rot - halfArc + wedge.arc * a
+      point = wedge.pos + vec2(cos(angle), sin(angle)) * wedge.maxRadius
+    result.add point
+
+  result.add result[0]
+
+proc overlaps*(w: Wedge, p: Vec2): bool {.inline.} =
+  ## Test overlap: wedge vs point.
+  let distance = p.dist(w.pos)
+  if distance <= w.maxRadius and distance >= w.minRadius:
+    let angle = angle(p, w.pos)
+    if abs(angleBetween(angle, w.rot)) < w.arc / 2:
+      return true
+
+proc overlaps*(p: Vec2, w: Wedge): bool {.inline.} =
+  ## Test overlap: point vs wedge.
+  overlaps(w, p)
+
+proc overlaps*(w: Wedge, l: Line, error = 0.5): bool {.inline.} =
+  ## Test overlap: wedge vs line.
+  ## Converts wedge to polygon first using error tolerance parameter.
+  overlaps(w.polygon(error), l)
+
+proc overlaps*(l: Line, w: Wedge, error = 0.5): bool {.inline.} =
+  ## Test overlap: line vs wedge
+  ## Converts wedge to polygon first using error tolerance parameter.
+  overlaps(w, l, error)
+
+proc overlaps*(w: Wedge, s: Segment, error = 0.5): bool {.inline.} =
+  ## Test overlap: wedge vs segment.
+  ## Converts wedge to polygon first using error tolerance parameter.
+  overlaps(w.polygon(error), s)
+
+proc overlaps*(s: Segment, w: Wedge, error = 0.5): bool {.inline.} =
+  ## Test overlap: segment vs wedge.
+  ## Converts wedge to polygon first using error tolerance parameter.
+  overlaps(w, s, error)
+
+proc overlaps*(w: Wedge, c: Circle, error = 0.5): bool {.inline.} =
+  ## Test overlap: wedge vs circle.
+  ## When needed converts wedge to polygon using error tolerance parameter.
+  let distance = w.pos.dist(c.pos)
+  if distance - c.radius <= w.maxRadius and
+    distance + c.radius >= w.minRadius:
+    return overlaps(w.polygon(error), c)
+
+proc overlaps*(c: Circle, w: Wedge, error = 0.5): bool {.inline.} =
+  ## Test overlap: circle vs wedge.
+  ## When needed converts wedge to polygon using error tolerance parameter.
+  overlaps(w, c, error)
+
+proc overlaps*(w: Wedge, r: Rect, error = 0.5): bool {.inline.} =
+  ## Test overlap: wedge vs rect.
+  ## Converts wedge to polygon first using error tolerance parameter.
+  overlaps(w.polygon(error), r)
+
+proc overlaps*(r: Rect, w: Wedge, error = 0.5): bool {.inline.} =
+  ## Test overlap: rect vs wedge.
+  ## Converts wedge to polygon first using error tolerance parameter.
+  overlaps(w, r, error)
+
+proc overlaps*(w: Wedge, p: Polygon, error = 0.5): bool {.inline.} =
+  ## Test overlap: wedge vs polygon.
+  ## Converts wedge to polygon first using error tolerance parameter.
+  overlaps(w.polygon(error), p)
+
+proc overlaps*(p: Polygon, w: Wedge, error = 0.5): bool {.inline.} =
+  ## Test overlap: polygon vs wedge.
+  ## Converts wedge to polygon first using error tolerance parameter.
+  overlaps(w, p, error)
+
+proc overlaps*(a: Wedge, b: Wedge, error = 0.5): bool {.inline.} =
+  ## Test overlap: wedge vs wedge.
+  ## Converts wedge to polygon first using error tolerance parameter.
+  overlaps(a.polygon(error), b.polygon(error))
