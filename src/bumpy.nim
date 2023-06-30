@@ -381,7 +381,7 @@ proc overlaps*(poly: Polygon, s: Segment): bool =
   for seg in poly.segments:
     if overlaps(seg, s):
       return true
-  # Test if the rectangle is inside the polygon.
+  # Test if the segment is inside the polygon.
   return overlaps(poly, s.at)
 
 proc overlaps*(s: Segment, poly: Polygon): bool {.inline.} =
@@ -406,7 +406,7 @@ proc overlaps*(a, b: Line): bool {.inline.} =
   denominator != 0
 
 proc overlaps*(l: Line, s: Segment): bool {.inline.} =
-  ## Test overlap: line vs seg.
+  ## Test overlap: line vs segment.
   let
     s1 = l.b - l.a
     s2 = s.to - s.at
@@ -416,7 +416,7 @@ proc overlaps*(l: Line, s: Segment): bool {.inline.} =
   u >= 0 and u <= 1
 
 proc overlaps*(s: Segment, l: Line): bool {.inline.} =
-  ## Test overlap: seg vs line.
+  ## Test overlap: segment vs line.
   overlaps(l, s)
 
 proc overlaps*(p: Vec2, l: Line, fudge = 0.1): bool {.inline.} =
