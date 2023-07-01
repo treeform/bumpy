@@ -588,7 +588,7 @@ proc arcTolerance(radius: float32, arc: float32, error: float32): int =
       numPoints = ceil(n * arc / (2 * Pi)).int
     return max(3, numPoints)
 
-proc polygon*(wedge: Wedge, error: float32 = 1.0): Polygon =
+proc polygon*(wedge: Wedge, error: float32 = 0.5): Polygon =
   ## Approximates a wedge shape with a Polygon
 
   let halfArc = wedge.arc / 2

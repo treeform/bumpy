@@ -96,8 +96,6 @@ while true:
     polygon.add(vec2(rand(0f..100f), rand(-100f..0f)))
     polygon.add(vec2(rand(0f..100f), rand(0f..100f)))
 
-    echo wedge
-
   if window.buttonPressed[MouseLeft]:
     inc collider
 
