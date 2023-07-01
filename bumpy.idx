@@ -66,7 +66,7 @@ intersects	bumpy.html#intersects,Segment,Line,Vec2	bumpy: intersects(s: Segment;
 length	bumpy.html#length,Segment	bumpy: length(s: Segment): float32	
 convexHull	bumpy.html#convexHull,Polygon	bumpy: convexHull(points: Polygon): Polygon	
 convexHullNormal	bumpy.html#convexHullNormal,Segment	bumpy: convexHullNormal(s: Segment): Vec2	
-polygon	bumpy.html#polygon,Wedge,float32	bumpy: polygon(wedge: Wedge; error: float32 = 1.0): Polygon	
+polygon	bumpy.html#polygon,Wedge,float32	bumpy: polygon(wedge: Wedge; error: float32 = 0.5): Polygon	
 overlaps	bumpy.html#overlaps,Wedge,Vec2	bumpy: overlaps(w: Wedge; p: Vec2): bool	
 overlaps	bumpy.html#overlaps,Vec2,Wedge	bumpy: overlaps(p: Vec2; w: Wedge): bool	
 overlaps	bumpy.html#overlaps,Wedge,Line,float	bumpy: overlaps(w: Wedge; l: Line; error = 0.5): bool	
