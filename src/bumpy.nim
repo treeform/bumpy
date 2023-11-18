@@ -390,6 +390,8 @@ proc overlaps*(s: Segment, poly: Polygon): bool {.inline.} =
 
 proc overlaps*(a: Polygon, b: Polygon): bool =
   ## Test overlap: polygon vs polygon.
+  if a.len == 0 or b.len == 0:
+    return
   for a in a.segments:
     for b in b.segments:
       if overlaps(a, b):
