@@ -58,7 +58,7 @@ jobs:
       run: atlas init
 
     - name: Install this Commit
-      run: atlas use file://${{ github.event.repository.name }}/${{ github.event.repository.name }}.nimble
+      run: atlas use file://${{ github.event.repository.name }}
 
     - name: List nim.cfg
       run: cat nim.cfg
