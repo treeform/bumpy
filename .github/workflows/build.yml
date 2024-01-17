@@ -70,4 +70,5 @@ jobs:
       run: |
         cd "${{ github.event.repository.name }}"
         # List test files here
+
         nim c -r tests/test.nim
