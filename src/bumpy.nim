@@ -277,17 +277,23 @@ proc overlaps*(l: Line, c: Circle): bool {.inline.} =
 proc overlaps*(d, s: Segment): bool =
   ## Test overlap: segment vs segment.
 
-  # Calculate the distance to intersection point.
-  let
-    uA1 = (s.to.x - s.at.x) * (d.at.y - s.at.y) - (s.to.y - s.at.y) * (d.at.x - s.at.x)
-    uB1 = (d.to.x - d.at.x) * (d.at.y - s.at.y) - (d.to.y - d.at.y) * (d.at.x - s.at.x)
-    uA2 = (s.to.y - s.at.y) * (d.to.x - d.at.x) - (s.to.x - s.at.x) * (d.to.y - d.at.y)
-    uB2 = (s.to.y - s.at.y) * (d.to.x - d.at.x) - (s.to.x - s.at.x) * (d.to.y - d.at.y)
-    uA = uA1 / uA2
-    uB = uB1 / uB2
+  # Calculate direction vectors for both lines
+  let dVec = d.to - d.at
+  let sVec = s.to - s.at
 
-  # If uA and uB are between 0-1, lines are colliding.
-  uA >= 0 and uA <= 1 and uB >= 0 and uB <= 1
+  # Calculate determinant of the matrix formed by direction vectors
+  let det = (dVec[0] * sVec[1]) - (dVec[1] * sVec[0])
+
+  # Check if the lines are parallel: https://math.stackexchange.com/a/424737/284422
+  if det == 0:
+    return false
+
+  # Calculate parameters of intersection point for both lines: https://stackoverflow.com/a/1968345/429476
+  let t1 = ((sVec[1] * (s.at.x - d.at.x)) - (sVec[0] * (s.at.y - d.at.y))) / det
+  let t2 = ((dVec[1] * (s.at.x - d.at.x)) - (dVec[0] * (s.at.y - d.at.y))) / det
+
+  # Check if the intersection point is within the range of both lines
+  return 0 <= t1 and t1 <= 1 and 0 <= t2 and t2 <= 1
 
 proc overlaps*(s: Segment, r: Rect): bool =
   ## Test overlap: segments vs rectangle.
