@@ -24,10 +24,10 @@ type
   Wedge* = object
     ## Used in Field of View, Area of Effect, Sector Targeting and
     ## Lighting/Shadows calculations.
-    pos*: Vec2              ## Position
-    rot*: float32           ## Rotation
-    minRadius*: float32     ## min radius, can't fire really close
-    maxRadius*: float32     ## far radius, max range
+    pos*: Vec2              ## Position.
+    rot*: float32           ## Rotation.
+    minRadius*: float32     ## Minimum radius, can't fire really close.
+    maxRadius*: float32     ## Far radius, max range.
     arc*: float32           ## Radians, -arc/2 is left and +arc/2 is right.
 
 proc rect*(x, y, w, h: float32): Rect {.inline.} =
@@ -65,15 +65,15 @@ proc `wh=`*(rect: var Rect, v: Vec2) {.inline.} =
   rect.h = v.y
 
 proc `*`*(r: Rect, v: float): Rect =
-  ## * all elements of a Rect.
+  ## Multiply all elements of a Rect.
   rect(r.x * v, r.y * v, r.w * v, r.h * v)
 
 proc `/`*(r: Rect, v: float): Rect =
-  ## / all elements of a Rect.
+  ## Divide all elements of a Rect.
   rect(r.x / v, r.y / v, r.w / v, r.h / v)
 
 proc `+`*(a, b: Rect): Rect =
-  ## Add two boxes together.
+  ## Add two rectangles together.
   result.x = a.x + b.x
   result.y = a.y + b.y
   result.w = a.w
@@ -180,7 +180,7 @@ proc overlaps*(a: Circle, b: Rect): bool =
     distY = a.pos.y - testY
     distance = sqrt(distX*distX + distY*distY)
 
-  # If the distance is less than the radius, collision!
+  # If the distance is less than the radius, there is a collision.
   distance <= a.radius
 
 proc overlaps*(a: Rect, b: Circle): bool {.inline.} =
@@ -194,14 +194,13 @@ proc overlaps*(a: Vec2, s: Segment, fudge = 0.1): bool =
   let
     d1 = dist(a, s.at)
     d2 = dist(a, s.to)
-
-  # Get the length of the segment.
+    # Get the length of the segment.
     lineLen = dist(s.at, s.to)
 
   # If the two distances are equal to the segment's
   # length, the point is on the segment!
   # Note we use the fudge here to give a range,
-  # rather than one #
+  # rather than one exact value.
   d1 + d2 >= lineLen - fudge and
   d1 + d2 <= lineLen + fudge
 
@@ -292,7 +291,7 @@ proc overlaps*(d, s: Segment): bool =
 proc overlaps*(s: Segment, r: Rect): bool =
   ## Test overlap: segments vs rectangle.
 
-  # Check if start or end of the segment is indie the rectangle.
+  # Check if start or end of the segment is inside the rectangle.
   if overlaps(s.at, r) or overlaps(s.to, r):
     return true
 
@@ -357,7 +356,7 @@ proc overlaps*(poly: Polygon, c: Circle): bool =
     if overlaps(s, c):
       return true
 
-  # Test of circle is inside:
+  # Test if circle is inside:
   overlaps(poly, c.pos)
 
 proc overlaps*(c: Circle, poly: Polygon): bool {.inline.} =
@@ -374,7 +373,7 @@ proc overlaps*(poly: Polygon, r: Rect): bool =
 
 proc overlaps*(r: Rect, poly: Polygon): bool {.inline.} =
   ## Test overlap: rect vs polygon.
-  overlaps(r, poly)
+  overlaps(poly, r)
 
 proc overlaps*(poly: Polygon, s: Segment): bool =
   ## Test overlap: polygon vs segment.
@@ -448,18 +447,18 @@ proc overlaps*(l: Line, r: Rect): bool {.inline.} =
   overlaps(r, l)
 
 proc overlaps*(p: Polygon, l: Line): bool {.inline.} =
-  ## Test overlap: rect vs line.
+  ## Test overlap: polygon vs line.
   for s in p.segments:
     if overlaps(s, l):
       return true
 
 proc overlaps*(l: Line, p: Polygon): bool {.inline.} =
-  ## Test overlap: line vs rect.
+  ## Test overlap: line vs polygon.
   overlaps(p, l)
 
 proc intersects*(a, b: Segment, at: var Vec2): bool {.inline.} =
-  ## Checks if the a segment intersects b segment.
-  ## If it returns true, at will have point of intersection
+  ## Checks if segment a intersects segment b.
+  ## If it returns true, at will have the point of intersection.
   let
     s1 = a.to - a.at
     s2 = b.to - b.at
@@ -486,7 +485,7 @@ proc intersects*(a, b: Line, at: var Vec2): bool {.inline.} =
 
 proc intersects*(l: Line, s: Segment, at: var Vec2): bool {.inline.} =
   ## Checks if the line intersects the segment.
-  ## If it returns true, at will have point of intersection
+  ## If it returns true, at will have the point of intersection.
   let
     s1 = l.b - l.a
     s2 = s.to - s.at
@@ -499,8 +498,8 @@ proc intersects*(l: Line, s: Segment, at: var Vec2): bool {.inline.} =
     return true
 
 proc intersects*(s: Segment, l: Line, at: var Vec2): bool {.inline.} =
-  ## Checks if the line intersects the segment.
-  ## If it returns true, at will have point of intersection
+  ## Checks if the segment intersects the line.
+  ## If it returns true, at will have the point of intersection.
   intersects(l, s, at)
 
 proc length*(s: Segment): float32 {.inline.} =
@@ -563,7 +562,7 @@ proc convexHull*(points: Polygon): Polygon =
   ## Monotone chain, a.k.a. Andrew's algorithm— O(n log n)
   ## Published in 1979 by A. M. Andrew.
 
-  if points.len <= 3: # It's just a Triangle.
+  if points.len <= 3: # It's just a triangle.
     return points
 
   var sortedPoints = points
@@ -636,7 +635,7 @@ proc overlaps*(w: Wedge, l: Line, error = 0.5): bool {.inline.} =
   overlaps(w.polygon(error), l)
 
 proc overlaps*(l: Line, w: Wedge, error = 0.5): bool {.inline.} =
-  ## Test overlap: line vs wedge
+  ## Test overlap: line vs wedge.
   ## Converts wedge to polygon first using error tolerance parameter.
   overlaps(w, l, error)
 
