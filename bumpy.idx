@@ -33,55 +33,55 @@ nim	overlaps	bumpy.html#overlaps,Rect,Rect	proc overlaps(a, b: Rect): bool		153
 nim	overlaps	bumpy.html#overlaps,Circle,Rect	proc overlaps(a: Circle; b: Rect): bool		160
 nim	overlaps	bumpy.html#overlaps,Rect,Circle	proc overlaps(a: Rect; b: Circle): bool		186
 nim	overlaps	bumpy.html#overlaps,Vec2,Segment,float	proc overlaps(a: Vec2; s: Segment; fudge = 0.1): bool		190
-nim	overlaps	bumpy.html#overlaps,Segment,Vec2,float	proc overlaps(a: Segment; b: Vec2; fudge = 0.1): bool		208
-nim	overlaps	bumpy.html#overlaps,Circle,Segment	proc overlaps(c: Circle; s: Segment): bool		212
-nim	overlaps	bumpy.html#overlaps,Segment,Circle	proc overlaps(s: Segment; c: Circle): bool		243
-nim	overlaps	bumpy.html#overlaps,Circle,Line	proc overlaps(c: Circle; l: Line): bool		247
-nim	overlaps	bumpy.html#overlaps,Line,Circle	proc overlaps(l: Line; c: Circle): bool		273
-nim	overlaps	bumpy.html#overlaps,Segment,Segment	proc overlaps(d, s: Segment): bool		277
-nim	overlaps	bumpy.html#overlaps,Segment,Rect	proc overlaps(s: Segment; r: Rect): bool		292
-nim	overlaps	bumpy.html#overlaps,Rect,Segment	proc overlaps(r: Rect; s: Segment): bool		303
-nim	overlapsTri	bumpy.html#overlapsTri,Polygon,Vec2	proc overlapsTri(tri: Polygon; p: Vec2): bool		307
-nim	overlaps	bumpy.html#overlaps,Polygon,Vec2	proc overlaps(poly: Polygon; p: Vec2): bool		327
-nim	overlaps	bumpy.html#overlaps,Vec2,Polygon	proc overlaps(p: Vec2; poly: Polygon): bool		346
-nim	overlaps	bumpy.html#overlaps,Polygon,Circle	proc overlaps(poly: Polygon; c: Circle): bool		350
-nim	overlaps	bumpy.html#overlaps,Circle,Polygon	proc overlaps(c: Circle; poly: Polygon): bool		363
-nim	overlaps	bumpy.html#overlaps,Polygon,Rect	proc overlaps(poly: Polygon; r: Rect): bool		367
-nim	overlaps	bumpy.html#overlaps,Rect,Polygon	proc overlaps(r: Rect; poly: Polygon): bool		375
-nim	overlaps	bumpy.html#overlaps,Polygon,Segment	proc overlaps(poly: Polygon; s: Segment): bool		379
-nim	overlaps	bumpy.html#overlaps,Segment,Polygon	proc overlaps(s: Segment; poly: Polygon): bool		387
-nim	overlaps	bumpy.html#overlaps,Polygon,Polygon	proc overlaps(a: Polygon; b: Polygon): bool		391
-nim	overlaps	bumpy.html#overlaps,Line,Line	proc overlaps(a, b: Line): bool		402
-nim	overlaps	bumpy.html#overlaps,Line,Segment	proc overlaps(l: Line; s: Segment): bool		410
-nim	overlaps	bumpy.html#overlaps,Segment,Line	proc overlaps(s: Segment; l: Line): bool		420
-nim	overlaps	bumpy.html#overlaps,Vec2,Line,float	proc overlaps(p: Vec2; l: Line; fudge = 0.1): bool		424
-nim	overlaps	bumpy.html#overlaps,Line,Vec2,float	proc overlaps(l: Line; p: Vec2; fudge = 0.1): bool		436
-nim	overlaps	bumpy.html#overlaps,Rect,Line	proc overlaps(r: Rect; l: Line): bool		440
-nim	overlaps	bumpy.html#overlaps,Line,Rect	proc overlaps(l: Line; r: Rect): bool		446
-nim	overlaps	bumpy.html#overlaps,Polygon,Line	proc overlaps(p: Polygon; l: Line): bool		450
-nim	overlaps	bumpy.html#overlaps,Line,Polygon	proc overlaps(l: Line; p: Polygon): bool		456
-nim	intersects	bumpy.html#intersects,Segment,Segment,Vec2	proc intersects(a, b: Segment; at: var Vec2): bool		460
-nim	intersects	bumpy.html#intersects,Line,Line,Vec2	proc intersects(a, b: Line; at: var Vec2): bool		474
-nim	intersects	bumpy.html#intersects,Line,Segment,Vec2	proc intersects(l: Line; s: Segment; at: var Vec2): bool		487
-nim	intersects	bumpy.html#intersects,Segment,Line,Vec2	proc intersects(s: Segment; l: Line; at: var Vec2): bool		501
-nim	length	bumpy.html#length,Segment	proc length(s: Segment): float32		506
-nim	convexHull	bumpy.html#convexHull,Polygon	proc convexHull(points: Polygon): Polygon		562
-nim	convexHullNormal	bumpy.html#convexHullNormal,Segment	proc convexHullNormal(s: Segment): Vec2		573
-nim	polygon	bumpy.html#polygon,Wedge,float32	proc polygon(wedge: Wedge; error: float32 = 0.5): Polygon		593
-nim	overlaps	bumpy.html#overlaps,Wedge,Vec2	proc overlaps(w: Wedge; p: Vec2): bool		621
-nim	overlaps	bumpy.html#overlaps,Vec2,Wedge	proc overlaps(p: Vec2; w: Wedge): bool		629
-nim	overlaps	bumpy.html#overlaps,Wedge,Line,float	proc overlaps(w: Wedge; l: Line; error = 0.5): bool		633
-nim	overlaps	bumpy.html#overlaps,Line,Wedge,float	proc overlaps(l: Line; w: Wedge; error = 0.5): bool		638
-nim	overlaps	bumpy.html#overlaps,Wedge,Segment,float	proc overlaps(w: Wedge; s: Segment; error = 0.5): bool		643
-nim	overlaps	bumpy.html#overlaps,Segment,Wedge,float	proc overlaps(s: Segment; w: Wedge; error = 0.5): bool		648
-nim	overlaps	bumpy.html#overlaps,Wedge,Circle,float	proc overlaps(w: Wedge; c: Circle; error = 0.5): bool		653
-nim	overlaps	bumpy.html#overlaps,Circle,Wedge,float	proc overlaps(c: Circle; w: Wedge; error = 0.5): bool		661
-nim	overlaps	bumpy.html#overlaps,Wedge,Rect,float	proc overlaps(w: Wedge; r: Rect; error = 0.5): bool		666
-nim	overlaps	bumpy.html#overlaps,Rect,Wedge,float	proc overlaps(r: Rect; w: Wedge; error = 0.5): bool		671
-nim	overlaps	bumpy.html#overlaps,Wedge,Polygon,float	proc overlaps(w: Wedge; p: Polygon; error = 0.5): bool		676
-nim	overlaps	bumpy.html#overlaps,Polygon,Wedge,float	proc overlaps(p: Polygon; w: Wedge; error = 0.5): bool		681
-nim	overlaps	bumpy.html#overlaps,Wedge,Wedge,float	proc overlaps(a: Wedge; b: Wedge; error = 0.5): bool		686
-nimgrp	*	bumpy.html#*-procs-all	proc		67
+nim	overlaps	bumpy.html#overlaps,Segment,Vec2,float	proc overlaps(a: Segment; b: Vec2; fudge = 0.1): bool		207
+nim	overlaps	bumpy.html#overlaps,Circle,Segment	proc overlaps(c: Circle; s: Segment): bool		211
+nim	overlaps	bumpy.html#overlaps,Segment,Circle	proc overlaps(s: Segment; c: Circle): bool		242
+nim	overlaps	bumpy.html#overlaps,Circle,Line	proc overlaps(c: Circle; l: Line): bool		246
+nim	overlaps	bumpy.html#overlaps,Line,Circle	proc overlaps(l: Line; c: Circle): bool		272
+nim	overlaps	bumpy.html#overlaps,Segment,Segment	proc overlaps(d, s: Segment): bool		276
+nim	overlaps	bumpy.html#overlaps,Segment,Rect	proc overlaps(s: Segment; r: Rect): bool		291
+nim	overlaps	bumpy.html#overlaps,Rect,Segment	proc overlaps(r: Rect; s: Segment): bool		302
+nim	overlapsTri	bumpy.html#overlapsTri,Polygon,Vec2	proc overlapsTri(tri: Polygon; p: Vec2): bool		306
+nim	overlaps	bumpy.html#overlaps,Polygon,Vec2	proc overlaps(poly: Polygon; p: Vec2): bool		326
+nim	overlaps	bumpy.html#overlaps,Vec2,Polygon	proc overlaps(p: Vec2; poly: Polygon): bool		345
+nim	overlaps	bumpy.html#overlaps,Polygon,Circle	proc overlaps(poly: Polygon; c: Circle): bool		349
+nim	overlaps	bumpy.html#overlaps,Circle,Polygon	proc overlaps(c: Circle; poly: Polygon): bool		362
+nim	overlaps	bumpy.html#overlaps,Polygon,Rect	proc overlaps(poly: Polygon; r: Rect): bool		366
+nim	overlaps	bumpy.html#overlaps,Rect,Polygon	proc overlaps(r: Rect; poly: Polygon): bool		374
+nim	overlaps	bumpy.html#overlaps,Polygon,Segment	proc overlaps(poly: Polygon; s: Segment): bool		378
+nim	overlaps	bumpy.html#overlaps,Segment,Polygon	proc overlaps(s: Segment; poly: Polygon): bool		386
+nim	overlaps	bumpy.html#overlaps,Polygon,Polygon	proc overlaps(a: Polygon; b: Polygon): bool		390
+nim	overlaps	bumpy.html#overlaps,Line,Line	proc overlaps(a, b: Line): bool		401
+nim	overlaps	bumpy.html#overlaps,Line,Segment	proc overlaps(l: Line; s: Segment): bool		409
+nim	overlaps	bumpy.html#overlaps,Segment,Line	proc overlaps(s: Segment; l: Line): bool		419
+nim	overlaps	bumpy.html#overlaps,Vec2,Line,float	proc overlaps(p: Vec2; l: Line; fudge = 0.1): bool		423
+nim	overlaps	bumpy.html#overlaps,Line,Vec2,float	proc overlaps(l: Line; p: Vec2; fudge = 0.1): bool		435
+nim	overlaps	bumpy.html#overlaps,Rect,Line	proc overlaps(r: Rect; l: Line): bool		439
+nim	overlaps	bumpy.html#overlaps,Line,Rect	proc overlaps(l: Line; r: Rect): bool		445
+nim	overlaps	bumpy.html#overlaps,Polygon,Line	proc overlaps(p: Polygon; l: Line): bool		449
+nim	overlaps	bumpy.html#overlaps,Line,Polygon	proc overlaps(l: Line; p: Polygon): bool		455
+nim	intersects	bumpy.html#intersects,Segment,Segment,Vec2	proc intersects(a, b: Segment; at: var Vec2): bool		459
+nim	intersects	bumpy.html#intersects,Line,Line,Vec2	proc intersects(a, b: Line; at: var Vec2): bool		473
+nim	intersects	bumpy.html#intersects,Line,Segment,Vec2	proc intersects(l: Line; s: Segment; at: var Vec2): bool		486
+nim	intersects	bumpy.html#intersects,Segment,Line,Vec2	proc intersects(s: Segment; l: Line; at: var Vec2): bool		500
+nim	length	bumpy.html#length,Segment	proc length(s: Segment): float32		505
+nim	convexHull	bumpy.html#convexHull,Polygon	proc convexHull(points: Polygon): Polygon		561
+nim	convexHullNormal	bumpy.html#convexHullNormal,Segment	proc convexHullNormal(s: Segment): Vec2		572
+nim	polygon	bumpy.html#polygon,Wedge,float32	proc polygon(wedge: Wedge; error: float32 = 0.5): Polygon		592
+nim	overlaps	bumpy.html#overlaps,Wedge,Vec2	proc overlaps(w: Wedge; p: Vec2): bool		620
+nim	overlaps	bumpy.html#overlaps,Vec2,Wedge	proc overlaps(p: Vec2; w: Wedge): bool		628
+nim	overlaps	bumpy.html#overlaps,Wedge,Line,float	proc overlaps(w: Wedge; l: Line; error = 0.5): bool		632
+nim	overlaps	bumpy.html#overlaps,Line,Wedge,float	proc overlaps(l: Line; w: Wedge; error = 0.5): bool		637
+nim	overlaps	bumpy.html#overlaps,Wedge,Segment,float	proc overlaps(w: Wedge; s: Segment; error = 0.5): bool		642
+nim	overlaps	bumpy.html#overlaps,Segment,Wedge,float	proc overlaps(s: Segment; w: Wedge; error = 0.5): bool		647
+nim	overlaps	bumpy.html#overlaps,Wedge,Circle,float	proc overlaps(w: Wedge; c: Circle; error = 0.5): bool		652
+nim	overlaps	bumpy.html#overlaps,Circle,Wedge,float	proc overlaps(c: Circle; w: Wedge; error = 0.5): bool		660
+nim	overlaps	bumpy.html#overlaps,Wedge,Rect,float	proc overlaps(w: Wedge; r: Rect; error = 0.5): bool		665
+nim	overlaps	bumpy.html#overlaps,Rect,Wedge,float	proc overlaps(r: Rect; w: Wedge; error = 0.5): bool		670
+nim	overlaps	bumpy.html#overlaps,Wedge,Polygon,float	proc overlaps(w: Wedge; p: Polygon; error = 0.5): bool		675
+nim	overlaps	bumpy.html#overlaps,Polygon,Wedge,float	proc overlaps(p: Polygon; w: Wedge; error = 0.5): bool		680
+nim	overlaps	bumpy.html#overlaps,Wedge,Wedge,float	proc overlaps(a: Wedge; b: Wedge; error = 0.5): bool		685
+nimgrp	intersects	bumpy.html#intersects-procs-all	proc		459
 nimgrp	overlaps	bumpy.html#overlaps-procs-all	proc		126
+nimgrp	*	bumpy.html#*-procs-all	proc		67
 nimgrp	rect	bumpy.html#rect-procs-all	proc		33
-nimgrp	intersects	bumpy.html#intersects-procs-all	proc		460
