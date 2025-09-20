@@ -11,7 +11,7 @@ var
 proc tick*() =
   ## Called this every frame in a while loop.
 
-  bxy.addImage("screen", screen, genMipmaps = false)
+  bxy.addImage("screen", screen)
 
   bxy.beginFrame(window.size)
   bxy.drawRect(rect(vec2(0, 0), window.size.vec2), color(1, 1, 1, 1))
