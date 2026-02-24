@@ -1,4 +1,6 @@
-import algorithm, vmath
+import
+  std/algorithm,
+  vmath
 
 type
   Circle* = object
@@ -31,18 +33,21 @@ type
     arc*: float32           ## Radians, -arc/2 is left and +arc/2 is right.
 
 proc rect*(x, y, w, h: float32): Rect {.inline.} =
+  ## Creates a rectangle from x, y, width, and height.
   result.x = x
   result.y = y
   result.w = w
   result.h = h
 
 proc rect*(pos, size: Vec2): Rect {.inline.} =
+  ## Creates a rectangle from position and size vectors.
   result.x = pos.x
   result.y = pos.y
   result.w = size.x
   result.h = size.y
 
 proc line*(a, b: Vec2): Line {.inline.} =
+  ## Creates a line from two points.
   result.a = a
   result.b = b
 
@@ -80,6 +85,7 @@ proc `+`*(a, b: Rect): Rect =
   result.h = a.h
 
 proc `$`*(a: Rect): string =
+  ## Formats a rectangle as a string.
   "(" & $a.x & ", " & $a.y & ": " & $a.w & " x " & $a.h & ")"
 
 proc `or`*(a, b: Rect): Rect =
@@ -97,16 +103,20 @@ proc `and`*(a, b: Rect): Rect =
   result.h = min(a.y + a.h, b.y + b.h) - result.y
 
 proc `+=`*(s: var Segment, v: Vec2) {.inline.} =
+  ## Translates a segment by a vector.
   s.at += v
   s.to += v
 
 proc `*`*(m: Mat3, s: Segment): Segment {.inline.} =
+  ## Transforms a segment by a matrix.
   Segment(at: m * s.at, to: m * s.to)
 
 proc circle*(pos: Vec2, radius: float32): Circle {.inline.} =
+  ## Creates a circle from a center and radius.
   Circle(pos: pos, radius: radius)
 
 proc segment*(at, to: Vec2): Segment {.inline.} =
+  ## Creates a segment from start and end points.
   Segment(at: at, to: to)
 
 iterator segments(r: Rect): Segment =
@@ -163,22 +173,22 @@ proc overlaps*(a: Circle, b: Rect): bool =
     testX = a.pos.x
     testY = a.pos.y
 
-  # Which edge is closest?
+  # Determine which edge is closest.
   if a.pos.x < b.x:
-    testX = b.x # Test left edge.
+    testX = b.x # Test the left edge.
   elif a.pos.x > b.x + b.w:
-    testX = b.x+b.w # Right edge.
+    testX = b.x + b.w # Test the right edge.
 
   if a.pos.y < b.y:
-    testY = b.y # Top edge.
-  elif a.pos.y > b.y+b.h:
-    testY = b.y+b.h # Bottom edge.
+    testY = b.y # Test the top edge.
+  elif a.pos.y > b.y + b.h:
+    testY = b.y + b.h # Test the bottom edge.
 
-  # Get distance from closest edges.
+  # Get the distance from the closest edges.
   let
     distX = a.pos.x - testX
     distY = a.pos.y - testY
-    distance = sqrt(distX*distX + distY*distY)
+    distance = sqrt(distX * distX + distY * distY)
 
   # If the distance is less than the radius, there is a collision.
   distance <= a.radius
@@ -190,16 +200,16 @@ proc overlaps*(a: Rect, b: Circle): bool {.inline.} =
 proc overlaps*(a: Vec2, s: Segment, fudge = 0.1): bool =
   ## Test overlap: point vs segment.
 
-  # Get distance from the point to the two ends of the segment.
+  # Get the distance from the point to the segment ends.
   let
     d1 = dist(a, s.at)
     d2 = dist(a, s.to)
     # Get the length of the segment.
     lineLen = dist(s.at, s.to)
 
-  # If the two distances are equal to the segment's
-  # length, the point is on the segment!
-  # Note we use the fudge here to give a range,
+  # If the two distances are equal to the segment length,
+  # the point is on the segment.
+  # Note that we use the fudge here to give a range
   # rather than one exact value.
   d1 + d2 >= lineLen - fudge and
   d1 + d2 <= lineLen + fudge
@@ -211,16 +221,16 @@ proc overlaps*(a: Segment, b: Vec2, fudge = 0.1): bool {.inline.} =
 proc overlaps*(c: Circle, s: Segment): bool =
   ## Test overlap: circle vs segment.
 
-  # If either end inside the circle return.
+  # Return if either end is inside the circle.
   if overlaps(s.at, c) or overlaps(s.to, c):
     return true
 
-  # Get length of the line.
+  # Get the length of the line.
   let len = s.at.dist(s.to)
   if len == 0:
     return false
 
-  # Get dot product of the line and circle.
+  # Get the dot product of the line and circle.
   let dot = (
     (c.pos.x - s.at.x) * (s.to.x - s.at.x) +
     (c.pos.y - s.at.y) * (s.to.y - s.at.y)
@@ -229,12 +239,12 @@ proc overlaps*(c: Circle, s: Segment): bool =
   # Find the closest point on the line.
   let closest = s.at + (dot * (s.to - s.at))
 
-  # Is this point actually on the line segment?
+  # Check whether this point is on the line segment.
   let onSegment = overlaps(closest, s)
   if not onSegment:
     return false
 
-  # Get distance to closest point.
+  # Get the distance to the closest point.
   let distance = closest.dist(c.pos)
 
   distance <= c.radius
@@ -246,16 +256,16 @@ proc overlaps*(s: Segment, c: Circle): bool {.inline.} =
 proc overlaps*(c: Circle, l: Line): bool =
   ## Test overlap: circle vs line.
 
-  # If either control point inside the circle return.
+  # Return if either control point is inside the circle.
   if overlaps(l.a, c) or overlaps(l.b, c):
     return true
 
-  # Get length of the line.
+  # Get the length of the line.
   let len = l.a.dist(l.b)
   if len == 0:
     return false
 
-  # Get dot product of the line and circle.
+  # Get the dot product of the line and circle.
   let dot = (
     (c.pos.x - l.a.x) * (l.b.x - l.a.x) +
     (c.pos.y - l.a.y) * (l.b.y - l.a.y)
@@ -264,7 +274,7 @@ proc overlaps*(c: Circle, l: Line): bool =
   # Find the closest point on the line.
   let closest = l.a + (dot * (l.b - l.a))
 
-  # Get distance to closest point.
+  # Get the distance to the closest point.
   let distance = closest.dist(c.pos)
 
   distance <= c.radius
@@ -276,7 +286,7 @@ proc overlaps*(l: Line, c: Circle): bool {.inline.} =
 proc overlaps*(d, s: Segment): bool =
   ## Test overlap: segment vs segment.
 
-  # Calculate the distance to intersection point.
+  # Calculate the intersection parameters.
   let
     uA1 = (s.to.x - s.at.x) * (d.at.y - s.at.y) - (s.to.y - s.at.y) * (d.at.x - s.at.x)
     uB1 = (d.to.x - d.at.x) * (d.at.y - s.at.y) - (d.to.y - d.at.y) * (d.at.x - s.at.x)
@@ -285,13 +295,13 @@ proc overlaps*(d, s: Segment): bool =
     uA = uA1 / uA2
     uB = uB1 / uB2
 
-  # If uA and uB are between 0-1, lines are colliding.
+  # If uA and uB are between 0 and 1, lines are colliding.
   uA >= 0 and uA <= 1 and uB >= 0 and uB <= 1
 
 proc overlaps*(s: Segment, r: Rect): bool =
   ## Test overlap: segments vs rectangle.
 
-  # Check if start or end of the segment is inside the rectangle.
+  # Check whether the segment endpoints are inside the rectangle.
   if overlaps(s.at, r) or overlaps(s.to, r):
     return true
 
@@ -304,23 +314,32 @@ proc overlaps*(r: Rect, s: Segment): bool {.inline.} =
   overlaps(s, r)
 
 proc overlapsTri*(tri: Polygon, p: Vec2): bool =
-  ## Optimization for triangles:
+  ## Optimized overlap test for triangles.
 
-  # get the area of the triangle
+  # Get the area of the triangle.
   let areaOrig = abs(
     (tri[1].x - tri[0].x) * (tri[2].y - tri[0].y) -
-    (tri[2].x - tri[0].x) * (tri[1].y-tri[0].y)
+    (tri[2].x - tri[0].x) * (tri[1].y - tri[0].y)
   )
 
-  # get the area of 3 triangles made between the point
-  # and the corners of the triangle
+  # Get the area of three triangles formed by the point
+  # and the corners of the original triangle.
   let
-    area1 = abs((tri[0].x - p.x) * (tri[1].y - p.y) - (tri[1].x - p.x) * (tri[0].y - p.y))
-    area2 = abs((tri[1].x - p.x) * (tri[2].y - p.y) - (tri[2].x - p.x) * (tri[1].y - p.y))
-    area3 = abs((tri[2].x - p.x) * (tri[0].y - p.y) - (tri[0].x - p.x) * (tri[2].y - p.y))
+    area1 = abs(
+      (tri[0].x - p.x) * (tri[1].y - p.y) -
+      (tri[1].x - p.x) * (tri[0].y - p.y)
+    )
+    area2 = abs(
+      (tri[1].x - p.x) * (tri[2].y - p.y) -
+      (tri[2].x - p.x) * (tri[1].y - p.y)
+    )
+    area3 = abs(
+      (tri[2].x - p.x) * (tri[0].y - p.y) -
+      (tri[0].x - p.x) * (tri[2].y - p.y)
+    )
 
   # If the sum of the three areas equals the original,
-  # we're inside the triangle!
+  # the point is inside the triangle.
   area1 + area2 + area3 == areaOrig
 
 proc overlaps*(poly: Polygon, p: Vec2): bool =
@@ -330,12 +349,12 @@ proc overlaps*(poly: Polygon, p: Vec2): bool =
 
   var collision = false
 
-  # Go through each of the sides of the polygon.
+  # Iterate through each side of the polygon.
   for s in poly.segments:
     let
       vc = s.at
       vn = s.to
-    # Compare position, flip 'collision' variable back and forth.
+    # Compare position and toggle the collision variable.
     if ((vc.y >= p.y and vn.y < p.y) or (vc.y < p.y and vn.y >= p.y)) and
       (p.x < (vn.x - vc.x) * (p.y - vc.y) / (vn.y - vc.y) + vc.x):
         collision = not collision
@@ -349,14 +368,14 @@ proc overlaps*(p: Vec2, poly: Polygon): bool {.inline.} =
 proc overlaps*(poly: Polygon, c: Circle): bool =
   ## Test overlap: polygon vs circle.
 
-  # Go through each of the sides of the polygon.
+  # Iterate through each side of the polygon.
   for s in poly.segments:
-    # check for collision between the circle and
-    # a line formed between the two vertices
+    # Check for collision between the circle and
+    # the segment formed by two vertices.
     if overlaps(s, c):
       return true
 
-  # Test if circle is inside:
+  # Test whether the circle center is inside.
   overlaps(poly, c.pos)
 
 proc overlaps*(c: Circle, poly: Polygon): bool {.inline.} =
@@ -368,7 +387,7 @@ proc overlaps*(poly: Polygon, r: Rect): bool =
   for s in poly.segments:
     if overlaps(s, r):
       return true
-  # Test if the rectangle is inside the polygon.
+  # Test whether the rectangle is inside the polygon.
   return overlaps(poly, vec2(r.x, r.y))
 
 proc overlaps*(r: Rect, poly: Polygon): bool {.inline.} =
@@ -380,7 +399,7 @@ proc overlaps*(poly: Polygon, s: Segment): bool =
   for seg in poly.segments:
     if overlaps(seg, s):
       return true
-  # Test if the segment is inside the polygon.
+  # Test whether the segment is inside the polygon.
   return overlaps(poly, s.at)
 
 proc overlaps*(s: Segment, poly: Polygon): bool {.inline.} =
@@ -395,7 +414,7 @@ proc overlaps*(a: Polygon, b: Polygon): bool =
     for b in b.segments:
       if overlaps(a, b):
         return true
-  # Test if the a polygon is inside the b polygon.
+  # Test whether polygon a is inside polygon b.
   return overlaps(a[0], b)
 
 proc overlaps*(a, b: Line): bool {.inline.} =
@@ -424,7 +443,7 @@ proc overlaps*(p: Vec2, l: Line, fudge = 0.1): bool {.inline.} =
   ## Test overlap: point vs line.
   let dir = l.a - l.b
   if dir.x == 0:
-    # Line is vertical
+    # The line is vertical.
     return p.x == l.b.x
   else:
     let
@@ -471,6 +490,8 @@ proc intersects*(a, b: Segment, at: var Vec2): bool {.inline.} =
     return true
 
 proc intersects*(a, b: Line, at: var Vec2): bool {.inline.} =
+  ## Checks whether two lines intersect.
+  ## If it returns true, at will have the point of intersection.
   let
     s1 = a.b - a.a
     s2 = b.b - b.a
@@ -508,7 +529,7 @@ proc length*(s: Segment): float32 {.inline.} =
 proc makeHullPresorted(points: Polygon): Polygon =
   ## Monotone chain.
 
-  # Deal with the upper half.
+  # Build the upper half.
   var upperHull: Polygon
   for i in 0 ..< points.len:
     let p = points[i]
@@ -522,7 +543,7 @@ proc makeHullPresorted(points: Polygon): Polygon =
     upperHull.add(p)
   discard upperHull.pop()
 
-  # Deal with the lower half.
+  # Build the lower half.
   var lowerHull: Polygon
   for i in countDown(points.len - 1, 0):
     let p = points[i]
@@ -536,7 +557,7 @@ proc makeHullPresorted(points: Polygon): Polygon =
     lowerHull.add(p)
   discard lowerHull.pop()
 
-  # See if lower or upper half needs merging.
+  # Merge lower and upper halves when needed.
   if upperHull.len == 1 and
     lowerHull.len == 1 and
     upperHull[0].x == lowerHull[0].x and
@@ -559,7 +580,7 @@ proc convexCmp(a, b: Vec2): int =
     return 0
 
 proc convexHull*(points: Polygon): Polygon =
-  ## Monotone chain, a.k.a. Andrew's algorithm— O(n log n)
+  ## Monotone chain, a.k.a. Andrew's algorithm, O(n log n).
   ## Published in 1979 by A. M. Andrew.
 
   if points.len <= 3: # It's just a triangle.
@@ -575,26 +596,25 @@ proc convexHullNormal*(s: Segment): Vec2 =
   -vec2(t.y, -t.x)
 
 proc arcTolerance(radius: float32, arc: float32, error: float32): int =
-  ## Calculates the number of points needed to represent an arc within a given
-  ## error tolerance.
+  ## Calculates points needed to represent an arc within a given error tolerance.
   if radius == 0.0:
     return 1
   else:
     let
-      # The formula for the number of points is derived from the error formula
-      # for approximating a circle with a regular polygon:
-      # error = radius - sqrt(radius^2 - (radius * cos(pi / n))^2)
+      # The formula is derived from the approximation error of
+      # a circle represented by a regular polygon:
+      # error = radius - sqrt(radius^2 - (radius * cos(pi / n))^2).
       n = ceil(Pi / arccos(1 - error / radius))
-      # We adjust n for our arc length.
+      # Adjust n for the arc length.
       numPoints = ceil(n * arc / (2 * Pi)).int
     return max(3, numPoints)
 
 proc polygon*(wedge: Wedge, error: float32 = 0.5): Polygon =
-  ## Approximates a wedge shape with a Polygon
+  ## Approximates a wedge shape with a polygon.
 
   let halfArc = wedge.arc / 2
 
-  # Generate min arc if minRadius is not zero.
+  # Generate the min arc when minRadius is not zero.
   if wedge.minRadius > 0:
     let numPointsMin = arcTolerance(wedge.minRadius, wedge.arc, error)
     for i in 0 ..< numPointsMin:
@@ -606,7 +626,7 @@ proc polygon*(wedge: Wedge, error: float32 = 0.5): Polygon =
   else:
     result.add wedge.pos
 
-  # Generate max arc.
+  # Generate the max arc.
   let numPointsMax = arcTolerance(wedge.maxRadius, wedge.arc, error)
   for i in countdown(numPointsMax - 1, 0):
     let

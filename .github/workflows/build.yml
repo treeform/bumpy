@@ -1,5 +1,9 @@
 name: Github Actions
-on: [push, pull_request]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 jobs:
   build:
     strategy:
@@ -11,7 +15,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v5
-    - uses: jiro4989/setup-nim-action@v2
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-    - run: nimble test -y
+    - uses: treeform/setup-nim-action@v6
+    - run: nimby install -g vmath
+    - run: nim r tests/tests.nim
