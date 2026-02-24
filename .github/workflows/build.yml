@@ -1,5 +1,9 @@
 name: Github Actions
-on: [push, pull_request]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 jobs:
   build:
     strategy:
@@ -12,5 +16,5 @@ jobs:
     steps:
     - uses: actions/checkout@v5
     - uses: treeform/setup-nim-action@v6
-    - run: nimby install bumpy.nimble
+    - run: nimby install -g bumpy.nimble
     - run: nim r tests/tests.nim
