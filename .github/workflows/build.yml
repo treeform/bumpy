@@ -16,5 +16,5 @@ jobs:
     steps:
     - uses: actions/checkout@v5
     - uses: treeform/setup-nim-action@v6
-    - run: nimby install -g bumpy.nimble
+    - run: nimby install -g vmath
     - run: nim r tests/tests.nim
