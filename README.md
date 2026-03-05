@@ -1,7 +1,6 @@
 # Bumpy - 2d geometry intersections library for Nim.
 
-* `atlas use bumpy`
-* `nimble install bumpy`
+* `nimby install bumpy`
 
 ![Github Actions](https://github.com/treeform/bumpy/workflows/Github%20Actions/badge.svg)
 
