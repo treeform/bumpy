@@ -23,3 +23,29 @@ Segment       | ✅           | ✅            | ✅           | ✅            
 Polygon       | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            | ✅            |
 Line          | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            | ✅            |
 Wedge         | ✅           | ✅            | ✅           | ✅            | ✅           | ✅            | ✅            |
+
+All shapes support `overlaps`.
+
+```nim
+if overlaps(circle, point):
+  echo "Circle and point overlap"
+```
+
+```nim
+if contains(circle, point):
+  echo "Circle contains point"
+```
+
+And some shapes support `intersects` functions.
+
+```nim
+var at: Vec2
+if intersects(circle, segment, at):
+  echo "Circle and segment intersect at ", at
+```
+
+```nim
+var at: Vec2
+if intersects(circle, polygon, at):
+  echo "Circle and polygon intersect at ", at
+```
