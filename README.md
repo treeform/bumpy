@@ -31,21 +31,10 @@ if overlaps(circle, point):
   echo "Circle and point overlap"
 ```
 
-```nim
-if contains(circle, point):
-  echo "Circle contains point"
-```
-
 And some shapes support `intersects` functions.
 
 ```nim
 var at: Vec2
-if intersects(circle, segment, at):
-  echo "Circle and segment intersect at ", at
-```
-
-```nim
-var at: Vec2
-if intersects(circle, polygon, at):
-  echo "Circle and polygon intersect at ", at
+if intersects(line, segment, at):
+  echo "Line and segment intersect at ", at
 ```

@@ -127,7 +127,7 @@ iterator segments(r: Rect): Segment =
   yield segment(vec2(r.x, r.y + r.h), vec2(r.x + r.w, r.y + r.h))
 
 iterator segments*(poly: Polygon): Segment =
-  ## Return elements in pairs: (1st, 2nd), (2nd, 3rd) ... (last, 1st).
+  ## Returns elements in pairs: (1st, 2nd), (2nd, 3rd) ... (last, 1st).
   for i in 0 ..< poly.len - 1:
     yield segment(poly[i], poly[i+1])
   if poly[^1] != poly[0]:
@@ -208,9 +208,8 @@ proc overlaps*(a: Vec2, s: Segment, fudge = 0.1): bool =
     lineLen = dist(s.at, s.to)
 
   # If the two distances are equal to the segment length,
-  # the point is on the segment.
-  # Note that we use the fudge here to give a range
-  # rather than one exact value.
+  # the point is on the segment. Use the fudge value to
+  # allow a range rather than one exact value.
   d1 + d2 >= lineLen - fudge and
   d1 + d2 <= lineLen + fudge
 
@@ -250,7 +249,7 @@ proc overlaps*(c: Circle, s: Segment): bool =
   distance <= c.radius
 
 proc overlaps*(s: Segment, c: Circle): bool {.inline.} =
-  ## Test overlap: circle vs segment.
+  ## Test overlap: segment vs circle.
   overlaps(c, s)
 
 proc overlaps*(c: Circle, l: Line): bool =
@@ -280,7 +279,7 @@ proc overlaps*(c: Circle, l: Line): bool =
   distance <= c.radius
 
 proc overlaps*(l: Line, c: Circle): bool {.inline.} =
-  ## Test overlap: circle vs line.
+  ## Test overlap: line vs circle.
   overlaps(c, l)
 
 proc overlaps*(d, s: Segment): bool =
@@ -295,11 +294,11 @@ proc overlaps*(d, s: Segment): bool =
     uA = uA1 / uA2
     uB = uB1 / uB2
 
-  # If uA and uB are between 0 and 1, lines are colliding.
+  # If uA and uB are between 0 and 1, the segments collide.
   uA >= 0 and uA <= 1 and uB >= 0 and uB <= 1
 
 proc overlaps*(s: Segment, r: Rect): bool =
-  ## Test overlap: segments vs rectangle.
+  ## Test overlap: segment vs rectangle.
 
   # Check whether the segment endpoints are inside the rectangle.
   if overlaps(s.at, r) or overlaps(s.to, r):
@@ -524,6 +523,7 @@ proc intersects*(s: Segment, l: Line, at: var Vec2): bool {.inline.} =
   intersects(l, s, at)
 
 proc length*(s: Segment): float32 {.inline.} =
+  ## Gets the length of a segment.
   (s.at - s.to).length
 
 proc makeHullPresorted(points: Polygon): Polygon =
@@ -596,7 +596,8 @@ proc convexHullNormal*(s: Segment): Vec2 =
   -vec2(t.y, -t.x)
 
 proc arcTolerance(radius: float32, arc: float32, error: float32): int =
-  ## Calculates points needed to represent an arc within a given error tolerance.
+  ## Calculates points needed to represent an arc
+  ## within a given error tolerance.
   if radius == 0.0:
     return 1
   else:
