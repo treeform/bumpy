@@ -119,6 +119,12 @@ proc segment*(at, to: Vec2): Segment {.inline.} =
   ## Creates a segment from start and end points.
   Segment(at: at, to: to)
 
+proc cross2d(a, b: Vec2): float32 {.inline.} =
+  a.x * b.y - a.y * b.x
+
+proc rangesOverlap(a0, a1, b0, b1: float32): bool {.inline.} =
+  max(min(a0, a1), min(b0, b1)) <= min(max(a0, a1), max(b0, b1))
+
 iterator segments(r: Rect): Segment =
   ## Returns all sides of the rect as segments.
   yield segment(vec2(r.x, r.y), vec2(r.x, r.y + r.h))
@@ -128,10 +134,11 @@ iterator segments(r: Rect): Segment =
 
 iterator segments*(poly: Polygon): Segment =
   ## Returns elements in pairs: (1st, 2nd), (2nd, 3rd) ... (last, 1st).
-  for i in 0 ..< poly.len - 1:
-    yield segment(poly[i], poly[i+1])
-  if poly[^1] != poly[0]:
-    yield segment(poly[^1], poly[0])
+  if poly.len > 0:
+    for i in 0 ..< poly.len - 1:
+      yield segment(poly[i], poly[i+1])
+    if poly[^1] != poly[0]:
+      yield segment(poly[^1], poly[0])
 
 proc overlaps*(a, b: Vec2): bool {.inline.} =
   ## Test overlap: point vs point. (Must be exactly equal.)
@@ -210,8 +217,7 @@ proc overlaps*(a: Vec2, s: Segment, fudge = 0.1): bool =
   # If the two distances are equal to the segment length,
   # the point is on the segment. Use the fudge value to
   # allow a range rather than one exact value.
-  d1 + d2 >= lineLen - fudge and
-  d1 + d2 <= lineLen + fudge
+  abs((d1 + d2) - lineLen) <= fudge + 0.00001'f
 
 proc overlaps*(a: Segment, b: Vec2, fudge = 0.1): bool {.inline.} =
   ## Test overlap: segment vs point.
@@ -284,17 +290,24 @@ proc overlaps*(l: Line, c: Circle): bool {.inline.} =
 
 proc overlaps*(d, s: Segment): bool =
   ## Test overlap: segment vs segment.
-
-  # Calculate the intersection parameters.
   let
-    uA1 = (s.to.x - s.at.x) * (d.at.y - s.at.y) - (s.to.y - s.at.y) * (d.at.x - s.at.x)
-    uB1 = (d.to.x - d.at.x) * (d.at.y - s.at.y) - (d.to.y - d.at.y) * (d.at.x - s.at.x)
-    uA2 = (s.to.y - s.at.y) * (d.to.x - d.at.x) - (s.to.x - s.at.x) * (d.to.y - d.at.y)
-    uB2 = (s.to.y - s.at.y) * (d.to.x - d.at.x) - (s.to.x - s.at.x) * (d.to.y - d.at.y)
-    uA = uA1 / uA2
-    uB = uB1 / uB2
+    dDir = d.to - d.at
+    sDir = s.to - s.at
+    delta = s.at - d.at
+    denominator = cross2d(dDir, sDir)
 
-  # If uA and uB are between 0 and 1, the segments collide.
+  if denominator == 0:
+    if cross2d(delta, dDir) != 0:
+      return false
+    if abs(dDir.x) >= abs(dDir.y):
+      return rangesOverlap(d.at.x, d.to.x, s.at.x, s.to.x)
+    else:
+      return rangesOverlap(d.at.y, d.to.y, s.at.y, s.to.y)
+
+  let
+    uA = cross2d(delta, sDir) / denominator
+    uB = cross2d(delta, dDir) / denominator
+
   uA >= 0 and uA <= 1 and uB >= 0 and uB <= 1
 
 proc overlaps*(s: Segment, r: Rect): bool =
@@ -343,6 +356,8 @@ proc overlapsTri*(tri: Polygon, p: Vec2): bool =
 
 proc overlaps*(poly: Polygon, p: Vec2): bool =
   ## Test overlap: polygon vs point.
+  if poly.len == 0:
+    return false
   if poly.len == 3:
     return overlapsTri(poly, p)
 
@@ -413,8 +428,8 @@ proc overlaps*(a: Polygon, b: Polygon): bool =
     for b in b.segments:
       if overlaps(a, b):
         return true
-  # Test whether polygon a is inside polygon b.
-  return overlaps(a[0], b)
+  # Test whether one polygon is inside the other.
+  return overlaps(a[0], b) or overlaps(b[0], a)
 
 proc overlaps*(a, b: Line): bool {.inline.} =
   ## Test overlap: line vs line.
@@ -422,7 +437,9 @@ proc overlaps*(a, b: Line): bool {.inline.} =
     s1 = a.b - a.a
     s2 = b.b - b.a
     denominator = (-s2.x * s1.y + s1.x * s2.y)
-  denominator != 0
+  if denominator == 0:
+    return cross2d(b.a - a.a, s1) == 0
+  true
 
 proc overlaps*(l: Line, s: Segment): bool {.inline.} =
   ## Test overlap: line vs segment.
@@ -430,6 +447,10 @@ proc overlaps*(l: Line, s: Segment): bool {.inline.} =
     s1 = l.b - l.a
     s2 = s.to - s.at
     denominator = (-s2.x * s1.y + s1.x * s2.y)
+  if denominator == 0:
+    return cross2d(s.at - l.a, s1) == 0 and
+      cross2d(s.to - l.a, s1) == 0
+  let
     numerator = s1.x * (l.a.y - s.at.y) - s1.y * (l.a.x - s.at.x)
     u = numerator / denominator
   u >= 0 and u <= 1
@@ -440,15 +461,10 @@ proc overlaps*(s: Segment, l: Line): bool {.inline.} =
 
 proc overlaps*(p: Vec2, l: Line, fudge = 0.1): bool {.inline.} =
   ## Test overlap: point vs line.
-  let dir = l.a - l.b
-  if dir.x == 0:
-    # The line is vertical.
-    return p.x == l.b.x
-  else:
-    let
-      m = dir.y / dir.x
-      b = l.a.y - m * l.a.x
-    return abs(p.y - (m * p.x + b)) < fudge
+  let dir = l.b - l.a
+  if dir == vec2(0, 0):
+    return p.dist(l.a) <= fudge
+  abs(cross2d(p - l.a, dir)) <= fudge * dir.length
 
 proc overlaps*(l: Line, p: Vec2, fudge = 0.1): bool {.inline.} =
   ## Test overlap: line vs point.
@@ -481,6 +497,9 @@ proc intersects*(a, b: Segment, at: var Vec2): bool {.inline.} =
     s1 = a.to - a.at
     s2 = b.to - b.at
     denominator = (-s2.x * s1.y + s1.x * s2.y)
+  if denominator == 0:
+    return false
+  let
     s = (-s1.y * (a.at.x - b.at.x) + s1.x * (a.at.y - b.at.y)) / denominator
     t = (s2.x * (a.at.y - b.at.y) - s2.y * (a.at.x - b.at.x)) / denominator
 
@@ -510,6 +529,9 @@ proc intersects*(l: Line, s: Segment, at: var Vec2): bool {.inline.} =
     s1 = l.b - l.a
     s2 = s.to - s.at
     denominator = (-s2.x * s1.y + s1.x * s2.y)
+  if denominator == 0:
+    return false
+  let
     numerator = s1.x * (l.a.y - s.at.y) - s1.y * (l.a.x - s.at.x)
     u = numerator / denominator
 
@@ -642,8 +664,10 @@ proc overlaps*(w: Wedge, p: Vec2): bool {.inline.} =
   ## Test overlap: wedge vs point.
   let distance = p.dist(w.pos)
   if distance <= w.maxRadius and distance >= w.minRadius:
-    let angle = angle(p, w.pos)
-    if abs(angleBetween(angle, w.rot)) < w.arc / 2:
+    if distance == 0:
+      return true
+    let angle = angle(p - w.pos)
+    if abs(angleBetween(angle, w.rot)) <= w.arc / 2:
       return true
 
 proc overlaps*(p: Vec2, w: Wedge): bool {.inline.} =
