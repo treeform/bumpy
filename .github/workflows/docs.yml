@@ -18,9 +18,11 @@ jobs:
         run: |
           mkdir -p "$HOME/.nimby/nim/doc"
           mkdir -p "$HOME/.nimby/nim/tools/dochack"
+          mkdir -p "$HOME/.nimby/nim/lib/pure"
           curl -fsSL "https://nim-lang.org/docs/nimdoc.out.css?v=2.2.8" -o "$HOME/.nimby/nim/doc/nimdoc.css"
           curl -fsSL "https://nim-lang.org/docs/dochack.js" -o "$HOME/.nimby/nim/doc/dochack.js"
           curl -fsSL "https://raw.githubusercontent.com/nim-lang/Nim/v2.2.8/tools/dochack/dochack.nim" -o "$HOME/.nimby/nim/tools/dochack/dochack.nim"
+          curl -fsSL "https://raw.githubusercontent.com/nim-lang/Nim/v2.2.8/lib/pure/fuzzysearch.nim" -o "$HOME/.nimby/nim/lib/pure/fuzzysearch.nim"
       - run: nim doc --index:on --project --git.url:https://github.com/${{ github.repository }} --git.commit:master  --out:${{ env.deploy-dir }} ${{ env.nim-src }}
       - name: "Copy to index.html"
         run: cp ${{ env.deploy-dir }}/${{ github.event.repository.name }}.html ${{ env.deploy-dir }}/index.html
