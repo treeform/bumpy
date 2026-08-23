@@ -17,5 +17,10 @@ jobs:
     steps:
     - uses: actions/checkout@v5
     - uses: treeform/setup-nim-action@v6
-    - run: nimby install -g vmath
+    - name: Install dependencies
+      shell: bash
+      run: |
+        cd ..
+        nimby create
+        nimby install vmath
     - run: nim r tests/tests.nim
